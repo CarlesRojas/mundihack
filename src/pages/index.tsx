@@ -1,44 +1,34 @@
-import Footer from '@components/Footer';
-import Header from '@components/Header';
-import { desktop, tablet } from '@styles/media';
+import Text from '@components/Text';
 import { styled } from '@styles/stitches.config';
 import { type NextPage } from 'next';
 
-const App = styled('div', {
-  position: 'relative',
-  width: '100vw',
-  height: '100vh',
+const Container = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  padding: '1rem',
-  gap: '1rem',
-
-  [tablet]: {
-    padding: '3rem 4rem',
-  },
-
-  [desktop]: {
-    padding: '5rem 8em',
-    flexDirection: 'column',
-  },
+  gap: '0.5rem',
 });
 
-const Main = styled('main', {
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  backgroundColor: 'hsla(0, 0%, 100%, 0.1)',
-  overflow: 'auto',
+const Separator = styled('div', {
+  width: '100%',
+  height: '2rem',
 });
 
-const Home: NextPage = () => {
+const Calendar: NextPage = () => {
   return (
-    <App>
-      <Header />
-      <Main />
-      <Footer />
-    </App>
+    <Container>
+      <Text>{'26-27 Jan 2023'}</Text>
+      <Separator />
+
+      <Text>{'___day 1_____________________'}</Text>
+      <Text css={{ marginLeft: '2rem' }}>{'10h inauguration'}</Text>
+      <Text css={{ marginLeft: '2rem' }}>{'21h pizzas'}</Text>
+      <Separator />
+
+      <Text>{'___day 2_____________________'}</Text>
+      <Text css={{ marginLeft: '2rem' }}>{'16h demos'}</Text>
+      <Text css={{ marginLeft: '2rem' }}>{'18h voting and winners'}</Text>
+    </Container>
   );
 };
 
-export default Home;
+export default Calendar;

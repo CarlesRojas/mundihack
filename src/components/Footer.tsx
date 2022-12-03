@@ -1,6 +1,6 @@
 import Text from '@components/Text';
 import useResize from '@hooks/useResize';
-import { styled } from '@stitches/react';
+import { styled } from '@styles/stitches.config';
 import { END_TIME, START_TIME } from '@utils/constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
