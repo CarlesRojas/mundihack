@@ -1,17 +1,22 @@
+import BracketText from '@components/BracketText';
+import Button from '@components/Button';
+import NextLink from '@components/NextLink';
 import Text from '@components/Text';
 import useUser from '@hooks/useUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
+import { END_TIME, ROUTE } from '@utils/constants';
 import { signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
-import Button from './Button';
 
 const Container = styled('header', {
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  gap: '0.5rem',
+  gap: '1rem',
 
   [tablet]: {
     flexDirection: 'row',
@@ -21,7 +26,7 @@ const Container = styled('header', {
 const Main = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  gap: '0.5rem',
+  gap: '1rem',
 });
 
 const Logo = styled('div', {
@@ -41,8 +46,22 @@ const LogoText = styled('p', {
   },
 });
 
+const Links = styled('div', {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '0.5rem 1rem',
+});
+
 const Header = () => {
   const user = useUser();
+  const router = useRouter();
+
+  const [isAfterEndTime, setisAfterEndTime] = useState(false);
+  console.log(isAfterEndTime);
+
+  useEffect(() => {
+    setisAfterEndTime(new Date().getTime() > END_TIME);
+  }, []);
 
   const greeting = user
     ? `welcome to the first mundimoto hackathon, ${user.firstName}!`
@@ -57,6 +76,29 @@ const Header = () => {
         </Logo>
 
         <Text>{greeting}</Text>
+
+        <Links>
+          <NextLink href={ROUTE.CALENDAR}>
+            <BracketText text="calendar" selected={router.pathname === ROUTE.CALENDAR} hover />
+          </NextLink>
+
+          <NextLink href={ROUTE.TEAMS}>
+            <BracketText text="teams" selected={router.pathname === ROUTE.TEAMS} hover />
+          </NextLink>
+
+          <NextLink href={ROUTE.PROJECTS} disabled={!isAfterEndTime}>
+            <BracketText
+              text="projects"
+              selected={router.pathname === ROUTE.PROJECTS}
+              disabled={!isAfterEndTime}
+              hover
+            />
+          </NextLink>
+
+          <NextLink href={ROUTE.YOUR_PROJECT}>
+            <BracketText text="your project" selected={router.pathname === ROUTE.YOUR_PROJECT} hover />
+          </NextLink>
+        </Links>
       </Main>
 
       {!user && <Button icon={<RiGoogleFill />} label={'log in with google'} onClick={() => signIn('google')} />}
