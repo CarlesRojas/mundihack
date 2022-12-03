@@ -10,16 +10,23 @@ const OldButton = styled('button', {
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
-  padding: '0.25rem 0.5rem',
+  padding: '0.25rem 0.5rem 0.85rem',
   height: 'fit-content',
-  boxShadow: '0 0.5rem 0 0 hsla(0, 0%, 100%, 0.5)',
+  boxShadow: 'inset 0 -0.6rem 0 0 hsla(0, 0%, 0%, 0.5)',
   width: 'fit-content',
 
   [mouse]: {
     '&:hover': {
-      translate: '0 0.25rem',
-      boxShadow: '0 0.25rem 0 0 hsla(0, 0%, 100%, 0.5)',
+      marginTop: '0.2rem',
+      padding: '0.25rem 0.5rem 0.65rem',
+      boxShadow: 'inset 0 -0.4rem 0 0 hsla(0, 0%, 0%, 0.5)',
     },
+  },
+
+  '&:active': {
+    marginTop: '0.4rem',
+    padding: '0.25rem 0.5rem 0.45rem',
+    boxShadow: 'inset 0 -0.2rem 0 0 hsla(0, 0%, 0%, 0.5)',
   },
 
   svg: {
