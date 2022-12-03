@@ -8,7 +8,6 @@ const globalStyles = globalCss({
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',
     overscrollBehavior: 'none',
     overflow: 'hidden',
-    cursor: 'none',
     '-webkit-touch-callout': 'none',
     touchAction: 'none'
   },
