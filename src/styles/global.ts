@@ -7,9 +7,8 @@ const globalStyles = globalCss({
     padding: 0,
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',
     overscrollBehavior: 'none',
-    overflow: 'hidden',
     '-webkit-touch-callout': 'none',
-    touchAction: 'none'
+    touchAction: 'none',
   },
 
   html: {
@@ -18,7 +17,7 @@ const globalStyles = globalCss({
     width: '100%',
     fontSize: '$main',
     overflow: 'hidden',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   },
 
   body: {
@@ -33,7 +32,7 @@ const globalStyles = globalCss({
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
     overflow: 'hidden',
-    pointerEvents: 'all'
+    pointerEvents: 'all',
   },
 
   '#root': {
@@ -41,16 +40,16 @@ const globalStyles = globalCss({
     height: '100%',
     width: '100%',
     overflow: 'hidden',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   },
 
   'img, video, svg': {
-    display: 'block'
+    display: 'block',
   },
 
   a: {
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
 
   ':-webkit-autofill, :-webkit-autofill:hover, :-webkit-autofill:focus': {
@@ -61,7 +60,7 @@ const globalStyles = globalCss({
     borderRadius: '1000px',
     padding: 0,
     fontSize: '1rem',
-    '-webkit-text-fill-color': '$text'
+    '-webkit-text-fill-color': '$text',
   },
 
   button: {
@@ -71,52 +70,52 @@ const globalStyles = globalCss({
     padding: 0,
     font: 'inherit',
     cursor: 'pointer',
-    outline: 'inherit'
+    outline: 'inherit',
   },
 
   ul: {
-    listStyleType: 'none'
+    listStyleType: 'none',
   },
 
   ':focus': {
-    outline: 'none'
+    outline: 'none',
   },
 
   '::-moz-focus-inner': {
-    border: 0
+    border: 0,
   },
 
   input: {
-    border: 'none'
+    border: 'none',
   },
 
   'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
     margin: 0,
     '-webkit-appearance': 'none',
-    appearance: 'none'
+    appearance: 'none',
   },
 
   "input[type='number']": {
     '-moz-appearance': 'textfield',
-    appearance: 'textfield'
+    appearance: 'textfield',
   },
 
   '::-webkit-scrollbar': {
     height: 0,
-    width: 0
+    width: 0,
   },
 
   '::-webkit-scrollbar-track': {
-    background: '#f1f1f1'
+    background: '#f1f1f1',
   },
 
   '::-webkit-scrollbar-thumb': {
-    background: '#888'
+    background: '#888',
   },
 
   '::-webkit-scrollbar-thumb:hover': {
-    background: '#555'
-  }
+    background: '#555',
+  },
 });
 
 export default globalStyles;

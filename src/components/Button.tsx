@@ -1,3 +1,4 @@
+import { mouse } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import type { ComponentPropsWithoutRef } from 'react';
 import Text from './Text';
@@ -12,16 +13,19 @@ const OldButton = styled('button', {
   padding: '0.25rem 0.5rem',
   height: 'fit-content',
   boxShadow: '0 0.5rem 0 0 hsla(0, 0%, 100%, 0.5)',
+  width: 'fit-content',
 
-  '&:hover': {
-    translate: '0 0.25rem',
-    boxShadow: '0 0.25rem 0 0 hsla(0, 0%, 100%, 0.5)'
+  [mouse]: {
+    '&:hover': {
+      translate: '0 0.25rem',
+      boxShadow: '0 0.25rem 0 0 hsla(0, 0%, 100%, 0.5)',
+    },
   },
 
   svg: {
     color: 'black',
-    fontSize: '2rem'
-  }
+    fontSize: '2rem',
+  },
 });
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {

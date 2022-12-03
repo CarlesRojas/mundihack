@@ -1,4 +1,5 @@
 import Text from '@components/Text';
+import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { trpc } from '@utils/trpc';
 import { RiGithubFill } from 'react-icons/ri';
@@ -7,17 +8,23 @@ import Button from './Button';
 const Container = styled('header', {
   width: '100%',
   display: 'flex',
-  justifyContent: 'space-between'
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  gap: '0.5rem',
+
+  [tablet]: {
+    flexDirection: 'row',
+  },
 });
 
 const Main = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  gap: '0.5rem'
+  gap: '0.5rem',
 });
 
 const Logo = styled('div', {
-  display: 'flex'
+  display: 'flex',
 });
 
 const LogoText = styled('p', {
@@ -27,10 +34,10 @@ const LogoText = styled('p', {
   variants: {
     red: {
       true: {
-        color: '$red'
-      }
-    }
-  }
+        color: '$red',
+      },
+    },
+  },
 });
 
 const Header = () => {
