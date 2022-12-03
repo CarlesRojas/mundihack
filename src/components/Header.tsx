@@ -1,8 +1,9 @@
 import Text from '@components/Text';
+import useUser from '@hooks/useUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { RiGithubFill } from 'react-icons/ri';
+import { signIn, signOut } from 'next-auth/react';
+import { RiGoogleFill } from 'react-icons/ri';
 import Button from './Button';
 
 const Container = styled('header', {
@@ -41,7 +42,11 @@ const LogoText = styled('p', {
 });
 
 const Header = () => {
-  const { data: sessionData } = useSession();
+  const user = useUser();
+
+  const greeting = user
+    ? `welcome to the first mundimoto hackathon, ${user.firstName}!`
+    : 'welcome to the first mundimoto hackathon!';
 
   return (
     <Container>
@@ -51,17 +56,11 @@ const Header = () => {
           <LogoText>{'hack'}</LogoText>
         </Logo>
 
-        <Text>{'welcome to the first mundimoto hackathon!'}</Text>
+        <Text>{greeting}</Text>
       </Main>
 
-      {!sessionData && (
-        <Button
-          icon={<RiGithubFill />}
-          label={'log in with GitHub'}
-          onClick={() => signIn('github', { callbackUrl: 'http://localhost:3000' })}
-        />
-      )}
-      {sessionData && <Button icon={<RiGithubFill />} label={'log out'} onClick={() => signOut()} />}
+      {!user && <Button icon={<RiGoogleFill />} label={'log in with google'} onClick={() => signIn('google')} />}
+      {user && <Button icon={<RiGoogleFill />} label={'log out'} onClick={() => signOut()} />}
     </Container>
   );
 };

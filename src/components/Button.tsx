@@ -31,7 +31,7 @@ const OldButton = styled('button', {
 
   svg: {
     color: 'black',
-    fontSize: '2rem',
+    fontSize: '1.5rem',
   },
 });
 
