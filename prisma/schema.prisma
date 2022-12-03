@@ -10,13 +10,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
+model Project {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+  githubLink  String
+  projectLink String
+  users       User[] @relation(name: "project")
+  votes       User[] @relation(name: "vote")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 // Necessary for Next auth
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  project        Project?  @relation("project", fields: [projectId], references: [id], onDelete: Cascade)
+  projectId      String?
+  vote           Project?  @relation("vote", fields: [votedProjectId], references: [id], onDelete: Cascade)
+  votedProjectId String?
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -41,16 +63,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
 }
 
 model VerificationToken {
