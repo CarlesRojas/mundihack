@@ -11,6 +11,7 @@ const App = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   padding: '1rem',
+  gap: '1rem',
 
   [tablet]: {
     padding: '3rem 4rem',
@@ -22,10 +23,19 @@ const App = styled('div', {
   },
 });
 
+const Main = styled('main', {
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  backgroundColor: 'hsla(0, 0%, 100%, 0.1)',
+  overflow: 'auto',
+});
+
 const Home: NextPage = () => {
   return (
     <App>
       <Header />
+      <Main />
       <Footer />
     </App>
   );

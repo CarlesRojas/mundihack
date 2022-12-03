@@ -1,7 +1,7 @@
 import Text from '@components/Text';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
-import { trpc } from '@utils/trpc';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { RiGithubFill } from 'react-icons/ri';
 import Button from './Button';
 
@@ -41,12 +41,7 @@ const LogoText = styled('p', {
 });
 
 const Header = () => {
-  const { data } = trpc.public.getSession.useQuery();
-
-  console.log(data);
-  const handleClick = () => {
-    console.log('click');
-  };
+  const { data: sessionData } = useSession();
 
   return (
     <Container>
@@ -59,7 +54,14 @@ const Header = () => {
         <Text>{'welcome to the first mundimoto hackathon!'}</Text>
       </Main>
 
-      <Button icon={<RiGithubFill />} label={'log in with GitHub'} onClick={handleClick} />
+      {!sessionData && (
+        <Button
+          icon={<RiGithubFill />}
+          label={'log in with GitHub'}
+          onClick={() => signIn('github', { callbackUrl: 'http://localhost:3000' })}
+        />
+      )}
+      {sessionData && <Button icon={<RiGithubFill />} label={'log out'} onClick={() => signOut()} />}
     </Container>
   );
 };
