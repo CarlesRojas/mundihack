@@ -23,6 +23,7 @@ const Skew = styled('div', {
   height: '100%',
   animation: `${skewAnimation} 8s linear infinite`,
   touchAction: 'none',
+  pointerEvents: 'none',
 });
 
 const Lines = styled('div', {
