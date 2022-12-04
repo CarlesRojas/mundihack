@@ -1,5 +1,6 @@
 import { useChannel } from '@ably-labs/react-hooks';
 import Button from '@components/Button';
+import Participants from '@components/Participants';
 import { styled } from '@styles/stitches.config';
 import { ABLY_CHANNEL } from '@utils/constants';
 import { useState } from 'react';
@@ -35,6 +36,8 @@ const Teams = () => {
       {messages.map((message, i) => (
         <p key={i}>{message}</p>
       ))}
+
+      <Participants />
     </Container>
   );
 };
