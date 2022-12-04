@@ -9,6 +9,7 @@ const Container = styled('footer', {
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
+  touchAction: 'none',
 });
 
 const ProgressBar = styled('div', {

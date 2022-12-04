@@ -17,6 +17,7 @@ const Container = styled('header', {
   flexDirection: 'column',
   justifyContent: 'space-between',
   gap: '1rem',
+  touchAction: 'none',
 
   [tablet]: {
     flexDirection: 'row',
@@ -57,7 +58,6 @@ const Header = () => {
   const router = useRouter();
 
   const [isAfterEndTime, setisAfterEndTime] = useState(false);
-  console.log(isAfterEndTime);
 
   useEffect(() => {
     setisAfterEndTime(new Date().getTime() > END_TIME);

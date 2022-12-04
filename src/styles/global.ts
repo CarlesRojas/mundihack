@@ -8,7 +8,6 @@ const globalStyles = globalCss({
     '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',
     overscrollBehavior: 'none',
     '-webkit-touch-callout': 'none',
-    touchAction: 'none',
   },
 
   html: {
@@ -18,6 +17,7 @@ const globalStyles = globalCss({
     fontSize: '$main',
     overflow: 'hidden',
     pointerEvents: 'none',
+    touchAction: 'none',
   },
 
   body: {
@@ -33,6 +33,7 @@ const globalStyles = globalCss({
     '-moz-osx-font-smoothing': 'grayscale',
     overflow: 'hidden',
     pointerEvents: 'all',
+    touchAction: 'none',
   },
 
   '#root': {
@@ -41,6 +42,7 @@ const globalStyles = globalCss({
     width: '100%',
     overflow: 'hidden',
     pointerEvents: 'none',
+    touchAction: 'none',
   },
 
   'img, video, svg': {
