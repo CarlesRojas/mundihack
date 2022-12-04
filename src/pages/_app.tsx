@@ -66,7 +66,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
       <SessionProvider session={session}>
         <App>
-          <Effects disabled>
+          <Effects disabled={process.env.NODE_ENV === 'development'}>
             <Container>
               <Header />
 

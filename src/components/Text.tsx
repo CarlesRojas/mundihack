@@ -3,11 +3,17 @@ import { styled } from '@styles/stitches.config';
 
 const Text = styled('p', {
   fontSize: '1.1rem',
+  fontWeight: '500',
 
   variants: {
     red: {
       true: {
         color: '$red',
+      },
+    },
+    pre: {
+      true: {
+        whiteSpace: 'pre',
       },
     },
     disabled: {

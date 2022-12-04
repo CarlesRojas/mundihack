@@ -2,7 +2,7 @@ import BracketText from '@components/BracketText';
 import Button from '@components/Button';
 import NextLink from '@components/NextLink';
 import Text from '@components/Text';
-import useUser from '@hooks/useUser';
+import useSessionUser from '@hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { END_TIME, ROUTE } from '@utils/constants';
@@ -54,7 +54,7 @@ const Links = styled('div', {
 });
 
 const Header = () => {
-  const user = useUser();
+  const user = useSessionUser();
   const router = useRouter();
 
   const [isAfterEndTime, setisAfterEndTime] = useState(false);
@@ -75,20 +75,31 @@ const Header = () => {
           <LogoText>{'hack'}</LogoText>
         </Logo>
 
-        <Text>{greeting}</Text>
+        <Text css={{}}>{greeting}</Text>
 
         <Links>
           <NextLink href={ROUTE.CALENDAR}>
-            <BracketText text="calendar" selected={router.pathname === ROUTE.CALENDAR} hover />
+            <BracketText
+              text="calendar"
+              red={router.pathname === ROUTE.CALENDAR}
+              selected={router.pathname === ROUTE.CALENDAR}
+              hover
+            />
           </NextLink>
 
           <NextLink href={ROUTE.TEAMS}>
-            <BracketText text="teams" selected={router.pathname === ROUTE.TEAMS} hover />
+            <BracketText
+              text="teams"
+              red={router.pathname === ROUTE.TEAMS}
+              selected={router.pathname === ROUTE.TEAMS}
+              hover
+            />
           </NextLink>
 
           <NextLink href={ROUTE.PROJECTS} disabled={!isAfterEndTime}>
             <BracketText
               text="projects"
+              red={router.pathname === ROUTE.PROJECTS}
               selected={router.pathname === ROUTE.PROJECTS}
               disabled={!isAfterEndTime}
               hover
@@ -97,7 +108,12 @@ const Header = () => {
 
           {user && (
             <NextLink href={ROUTE.YOUR_PROJECT}>
-              <BracketText text="your project" selected={router.pathname === ROUTE.YOUR_PROJECT} hover />
+              <BracketText
+                text="your project"
+                red={router.pathname === ROUTE.YOUR_PROJECT}
+                selected={router.pathname === ROUTE.YOUR_PROJECT}
+                hover
+              />
             </NextLink>
           )}
         </Links>

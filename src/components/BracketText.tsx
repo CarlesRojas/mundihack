@@ -16,21 +16,22 @@ const Container = styled('div', {
 
 interface BracketTextProps {
   text: string;
+  red?: boolean;
   selected?: boolean;
   disabled?: boolean;
   hover?: boolean;
 }
 
-const BracketText = ({ text, selected, disabled, hover }: BracketTextProps) => {
+const BracketText = ({ text, red, selected, disabled, hover }: BracketTextProps) => {
   return (
     <Container disabled={disabled}>
-      <Text red={selected}>{'['}</Text>
+      <Text red={red}>{'['}</Text>
 
-      <Text red={selected} underlined={selected} disabled={disabled} hover={hover}>
+      <Text red={red} underlined={selected} disabled={disabled} hover={hover}>
         {text}
       </Text>
 
-      <Text red={selected}>{']'}</Text>
+      <Text red={red}>{']'}</Text>
     </Container>
   );
 };
