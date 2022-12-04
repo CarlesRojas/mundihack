@@ -5,12 +5,12 @@ import usePusher from '@hooks/usePusher';
 import globalStyles from '@styles/global';
 import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
+import { trpc } from '@utils/trpc';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
-import { trpc } from '../utils/trpc';
 
 const App = styled('div', {
   position: 'relative',

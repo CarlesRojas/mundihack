@@ -1,7 +1,8 @@
+import { env } from '@env/client.mjs';
+import usePageUnload from '@hooks/usePageUnload';
 import type { Channel } from 'pusher-js';
 import Pusher from 'pusher-js';
 import { useRef } from 'react';
-import usePageUnload from './usePageUnload';
 
 export interface PusherSubscription {
   connect: () => void;
@@ -18,7 +19,7 @@ const usePusher = () => {
     if (pusher.current) return;
     console.log('Connect to pusher');
 
-    pusher.current = new Pusher('fa91eb2044bab8a4d3d9', { cluster: 'eu' });
+    pusher.current = new Pusher(env.NEXT_PUBLIC_PUSHER_APP_KEY, { cluster: env.NEXT_PUBLIC_PUSHER_APP_CLUSTER });
     channel.current = pusher.current.subscribe('mundihackChannel');
   };
 

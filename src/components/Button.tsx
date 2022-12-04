@@ -1,7 +1,7 @@
+import Text from '@components/Text';
 import { mouse } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import type { ComponentPropsWithoutRef } from 'react';
-import Text from './Text';
 
 const OldButton = styled('button', {
   fontSize: '2rem',

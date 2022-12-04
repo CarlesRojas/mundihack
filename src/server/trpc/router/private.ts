@@ -1,26 +1,18 @@
+import { env } from '@env/server.mjs';
+import { protectedProcedure, router } from '@server/trpc/trpc';
 import Pusher from 'pusher';
-import { protectedProcedure, router } from '../trpc';
-
-let pusherInstance: Pusher | null = null;
-
-const getPusher = () => {
-  if (pusherInstance) return pusherInstance;
-
-  pusherInstance = new Pusher({
-    appId: '1519645',
-    key: 'fa91eb2044bab8a4d3d9',
-    secret: '83d33d7eebf0230665b8',
-    cluster: 'eu',
-    useTLS: true,
-  });
-
-  return pusherInstance;
-};
 
 export const privateRouter = router({
   emitEvent: protectedProcedure.mutation(() => {
-    const pusher = getPusher();
-    if (!pusher) return;
+    const pusher = new Pusher({
+      appId: env.PUSHER_APP_ID,
+      key: env.PUSHER_APP_KEY,
+      secret: env.PUSHER_APP_SECRET,
+      cluster: env.PUSHER_APP_CLUSTER,
+      useTLS: true,
+    });
+
+    console.log(pusher);
 
     pusher.trigger('mundihackChannel', 'testEvent', {
       message: 'hello world',
