@@ -36,7 +36,7 @@ const globalStyles = globalCss({
     touchAction: 'none',
   },
 
-  '#root': {
+  '#__next': {
     position: 'relative',
     height: '100%',
     width: '100%',

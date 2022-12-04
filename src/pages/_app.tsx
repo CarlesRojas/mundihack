@@ -12,8 +12,8 @@ import { trpc } from '../utils/trpc';
 
 const App = styled('div', {
   position: 'relative',
-  width: '100vw',
-  height: '100vh',
+  width: '100%',
+  height: '100%',
   padding: '1rem',
   background: 'radial-gradient(transparent, rgba(0, 0, 0, 0.8))',
   backgroundSize: 'cover',
