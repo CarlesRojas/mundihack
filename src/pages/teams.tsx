@@ -1,5 +1,5 @@
 import Button from '@components/Button';
-import type { PusherSubscription } from '@hooks/usePusher';
+import type { AblySubscription } from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
 import { trpc } from '@utils/trpc';
 import { useEffect, useState } from 'react';
@@ -11,8 +11,8 @@ const Container = styled('div', {
   gap: '0.5rem',
 });
 
-const Teams = ({ pusher }: { pusher: PusherSubscription }) => {
-  const { sub, unsub } = pusher;
+const Teams = ({ ably }: { ably: AblySubscription }) => {
+  const { sub, unsub } = ably;
 
   const { mutate } = trpc.private.emitEvent.useMutation();
 

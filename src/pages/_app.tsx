@@ -1,7 +1,7 @@
 import Effects from '@components/Effects';
 import Footer from '@components/Footer';
 import Header from '@components/Header';
-import usePusher from '@hooks/usePusher';
+import useAbly from '@hooks/useAbly';
 import globalStyles from '@styles/global';
 import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
@@ -10,7 +10,6 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import Head from 'next/head';
-import { useEffect } from 'react';
 
 const App = styled('div', {
   position: 'relative',
@@ -50,11 +49,11 @@ const Main = styled('main', {
 });
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
-  const pusher = usePusher();
+  const ably = useAbly();
 
-  useEffect(() => {
-    pusher.connect();
-  }, [pusher]);
+  // useEffect(() => {
+  //   ably.connect();
+  // }, [ably]);
 
   globalStyles();
 
@@ -75,7 +74,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
               <Header />
 
               <Main>
-                <Component {...pageProps} pusher={pusher} />
+                <Component {...pageProps} ably={ably} />
               </Main>
 
               <Footer />

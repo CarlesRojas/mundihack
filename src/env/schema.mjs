@@ -18,10 +18,8 @@ export const serverSchema = z.object({
   ),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  PUSHER_APP_ID: z.string(),
-  PUSHER_APP_KEY: z.string(),
-  PUSHER_APP_SECRET: z.string(),
-  PUSHER_APP_CLUSTER: z.string(),
+  ABLY_SERVER_API_KEY: z.string(),
+  ABLY_CLIENT_API_KEY: z.string(),
 });
 
 /**
@@ -30,8 +28,7 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
-  NEXT_PUBLIC_PUSHER_APP_CLUSTER: z.string(),
+  // NEXT_PUBLIC_SECRET: z.string(),
 });
 
 /**
@@ -41,6 +38,5 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-  NEXT_PUBLIC_PUSHER_APP_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
+  // NEXT_PUBLIC_SECRET: process.env.NEXT_PUBLIC_SECRET,
 };
