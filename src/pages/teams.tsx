@@ -1,8 +1,8 @@
-import { useChannel } from '@ably-labs/react-hooks';
 import Button from '@components/Button';
+import useAbly from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
-import { ABLY_CHANNEL } from '@utils/constants';
-import { useState } from 'react';
+import { ABLY_EVENT } from '@utils/constants';
+import { useCallback } from 'react';
 import { RiAddFill } from 'react-icons/ri';
 
 const Container = styled('div', {
@@ -12,29 +12,15 @@ const Container = styled('div', {
 });
 
 const Teams = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const handleUpdateTeamsEvent = useCallback(() => {
+    console.log('update teams');
+  }, []);
 
-  const [, ably] = useChannel(ABLY_CHANNEL, () => {
-    setMessages((messages) => [...messages, 'Hello from Ably!']);
-  });
+  const { updateTeams } = useAbly({ [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent });
 
   return (
     <Container>
-      <Button
-        icon={<RiAddFill />}
-        label={'Send event'}
-        onClick={async () => {
-          await fetch('/api/ably/updateTeams', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ author: ably.auth.clientId }),
-          });
-        }}
-      />
-
-      {messages.map((message, i) => (
-        <p key={i}>{message}</p>
-      ))}
+      <Button icon={<RiAddFill />} label={'Send event'} onClick={updateTeams} />
     </Container>
   );
 };
