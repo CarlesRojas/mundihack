@@ -1,9 +1,8 @@
 import Button from '@components/Button';
-import usePusher from '@hooks/usePusher';
+import type { PusherSubscription } from '@hooks/usePusher';
 import { styled } from '@styles/stitches.config';
 import { trpc } from '@utils/trpc';
-import { type NextPage } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RiAddFill } from 'react-icons/ri';
 
 const Container = styled('div', {
@@ -12,14 +11,16 @@ const Container = styled('div', {
   gap: '0.5rem',
 });
 
-const Teams: NextPage = () => {
-  const { sub, unsub } = usePusher();
+const Teams = ({ pusher }: { pusher: PusherSubscription }) => {
+  const { sub, unsub } = pusher;
 
   const { mutate } = trpc.private.emitEvent.useMutation();
 
+  const [messages, setMessages] = useState<string[]>([]);
+
   useEffect(() => {
     sub('testEvent', ({ message }: { message: string }) => {
-      console.log('team created + ', message);
+      setMessages((messages) => [...messages, message]);
     });
 
     return () => {
@@ -30,6 +31,9 @@ const Teams: NextPage = () => {
   return (
     <Container>
       <Button icon={<RiAddFill />} label={'Send event'} onClick={() => mutate()} />
+      {messages.map((message, i) => (
+        <div key={i}>{message}</div>
+      ))}
     </Container>
   );
 };
