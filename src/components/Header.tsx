@@ -95,9 +95,11 @@ const Header = () => {
             />
           </NextLink>
 
-          <NextLink href={ROUTE.YOUR_PROJECT}>
-            <BracketText text="your project" selected={router.pathname === ROUTE.YOUR_PROJECT} hover />
-          </NextLink>
+          {user && (
+            <NextLink href={ROUTE.YOUR_PROJECT}>
+              <BracketText text="your project" selected={router.pathname === ROUTE.YOUR_PROJECT} hover />
+            </NextLink>
+          )}
         </Links>
       </Main>
 
