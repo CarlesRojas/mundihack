@@ -7,3 +7,9 @@ export enum ROUTE {
   PROJECTS = '/projects',
   YOUR_PROJECT = '/your-project',
 }
+
+export const ABLY_CHANNEL = 'ablyMundihack';
+
+export enum ABLY_EVENT {
+  UPDATE_TEAMS = 'update-teams',
+}

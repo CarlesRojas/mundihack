@@ -1,7 +1,8 @@
+import { configureAbly } from '@ably-labs/react-hooks';
 import Effects from '@components/Effects';
 import Footer from '@components/Footer';
 import Header from '@components/Header';
-import useAbly from '@hooks/useAbly';
+import { env } from '@env/client.mjs';
 import globalStyles from '@styles/global';
 import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
@@ -10,6 +11,8 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import Head from 'next/head';
+
+configureAbly({ authUrl: `${env.NEXT_PUBLIC_HOSTNAME}/api/ably/createToken` });
 
 const App = styled('div', {
   position: 'relative',
@@ -49,12 +52,6 @@ const Main = styled('main', {
 });
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
-  const ably = useAbly();
-
-  // useEffect(() => {
-  //   ably.connect();
-  // }, [ably]);
-
   globalStyles();
 
   return (
@@ -74,7 +71,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
               <Header />
 
               <Main>
-                <Component {...pageProps} ably={ably} />
+                <Component {...pageProps} />
               </Main>
 
               <Footer />
