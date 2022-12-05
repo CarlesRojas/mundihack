@@ -3,7 +3,7 @@ import Team from '@components/Team';
 import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
-import { ABLY_EVENT } from '@utils/constants';
+import { ABLY_EVENT, ACTION } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { trpc } from '@utils/trpc';
 import { useSession } from 'next-auth/react';
@@ -33,6 +33,7 @@ const Wrap = styled('ul', {
 const Teams = () => {
   const { data } = useSession();
 
+  const { data: teamAction, refetch: refetchAction } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
   const { data: users, refetch: refetchUsers } = trpc.public.getUsers.useQuery();
   const { data: projects, refetch: refetchProjects } = trpc.public.getProjects.useQuery();
   const { data: user, refetch: refetchUser } = trpc.private.getUser.useQuery(undefined, { enabled: !!data });
@@ -43,7 +44,14 @@ const Teams = () => {
     refetchUser();
   }, [refetchProjects, refetchUsers, refetchUser]);
 
-  const { updateTeams } = useAbly({ [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent });
+  const handleUpdateActionsEvent = useCallback(() => {
+    refetchAction();
+  }, [refetchAction]);
+
+  const { updateTeams } = useAbly({
+    [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent,
+    [ABLY_EVENT.UPDATE_ACTIONS]: handleUpdateActionsEvent,
+  });
 
   const usersWithoutATeam = users?.filter(({ projectId }) => !projectId);
 
@@ -51,7 +59,13 @@ const Teams = () => {
     <Container>
       <Wrap bigGap>
         {projects?.map((project, i) => (
-          <Team key={project.id} team={project} index={i + 1} updateTeams={updateTeams}></Team>
+          <Team
+            key={project.id}
+            active={teamAction?.allowed}
+            team={project}
+            index={i + 1}
+            updateTeams={updateTeams}
+          ></Team>
         ))}
       </Wrap>
 

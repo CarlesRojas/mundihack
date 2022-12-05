@@ -1,5 +1,6 @@
 import { publicProcedure, router } from '@server/trpc/trpc';
 import { MAX_TEAM_SIZE } from '@utils/constants';
+import { z } from 'zod';
 
 export const publicRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -40,5 +41,10 @@ export const publicRouter = router({
       },
       orderBy: { createdAt: 'asc' },
     });
+  }),
+  getAction: publicProcedure.input(z.object({ name: z.string() })).query(async ({ ctx, input }) => {
+    const actions = await ctx.prisma.action.findMany({ where: { name: input.name } });
+    if (actions.length === 0) return await ctx.prisma.action.create({ data: { name: input.name, allowed: false } });
+    return actions[0];
   }),
 });

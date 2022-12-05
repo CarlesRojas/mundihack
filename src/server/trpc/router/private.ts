@@ -31,11 +31,11 @@ export const privateRouter = router({
     const usersToKick = newProjectUsers.slice(0, numberOfUsersToKick).map((user) => user.id);
     await ctx.prisma.user.updateMany({ where: { id: { in: usersToKick } }, data: { projectId: null } });
   }),
-  updateAction: protectedProcedure
-    .input(z.object({ action: z.string(), value: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.session.user.isAdmin) return;
 
-      await ctx.prisma.action.updateMany({ where: { name: input.action }, data: { allowed: input.value } });
+  setAction: protectedProcedure
+    .input(z.object({ action: z.string(), allowed: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session.user.isAdmin)
+        await ctx.prisma.action.updateMany({ where: { name: input.action }, data: { allowed: input.allowed } });
     }),
 });

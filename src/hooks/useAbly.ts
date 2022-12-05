@@ -25,7 +25,15 @@ const useAbly = (callbacks?: AblyCallbacks) => {
     });
   }, [ably]);
 
-  return { updateTeams };
+  const updateActions = useCallback(async () => {
+    await fetch('/api/ably/updateActions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author: ably.auth.clientId }),
+    });
+  }, [ably]);
+
+  return { updateTeams, updateActions };
 };
 
 export default useAbly;

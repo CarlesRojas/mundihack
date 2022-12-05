@@ -33,6 +33,7 @@ interface TeamProps {
   team: RouterOutputs['public']['getProjects'][0];
   index: number;
   updateTeams: () => void;
+  active?: boolean;
 }
 
 const getTeamText = (index: number, isUserTeam: boolean, isTeamFull: boolean, isHovered: boolean) => {
@@ -42,7 +43,7 @@ const getTeamText = (index: number, isUserTeam: boolean, isTeamFull: boolean, is
   return `Team ${index}________JOIN`;
 };
 
-const Team = ({ team, index, updateTeams }: TeamProps) => {
+const Team = ({ team, index, updateTeams, active }: TeamProps) => {
   const { data: session } = useSession();
   const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
 
@@ -62,7 +63,12 @@ const Team = ({ team, index, updateTeams }: TeamProps) => {
   const usersText = team.users.map(({ name }) => ({ text: `[ ${parseName(name).fullName} ]` }));
 
   return (
-    <Container active={!!session} blocked={isTeamFull && !isUserTeam} onClick={handleProjectClick} ref={hoverRef}>
+    <Container
+      active={active && !!session}
+      blocked={isTeamFull && !isUserTeam}
+      onClick={handleProjectClick}
+      ref={hoverRef}
+    >
       <Text red={isUserTeam} pre>
         {getBoxRow({ first: true, placeText: teamText }).join('')}
       </Text>
