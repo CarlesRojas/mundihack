@@ -5,10 +5,9 @@ import Text from '@components/Text';
 import useSessionUser from '@server/hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
-import { END_TIME, ROUTE } from '@utils/constants';
+import { ROUTE } from '@utils/constants';
 import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
 
 const Container = styled('header', {
@@ -57,12 +56,6 @@ const Header = () => {
   const user = useSessionUser();
   const router = useRouter();
 
-  const [isAfterEndTime, setisAfterEndTime] = useState(false);
-
-  useEffect(() => {
-    setisAfterEndTime(new Date().getTime() > END_TIME);
-  }, []);
-
   const greeting = user
     ? `welcome to the first mundimoto hackathon, ${user.firstName}!`
     : 'welcome to the first mundimoto hackathon!';
@@ -96,12 +89,11 @@ const Header = () => {
             />
           </NextLink>
 
-          <NextLink href={ROUTE.PROJECTS} disabled={!isAfterEndTime}>
+          <NextLink href={ROUTE.PROJECTS}>
             <BracketText
               text="projects"
               red={router.pathname === ROUTE.PROJECTS}
               selected={router.pathname === ROUTE.PROJECTS}
-              disabled={!isAfterEndTime}
               hover
             />
           </NextLink>
