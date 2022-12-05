@@ -2,12 +2,12 @@ import BracketText from '@components/BracketText';
 import Team from '@components/Team';
 import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
-import useUser from '@hooks/useUser';
+import useUser from '@server/hooks/useUser';
 import { styled } from '@styles/stitches.config';
 import { ABLY_EVENT } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { trpc } from '@utils/trpc';
-import { useCallback } from 'react';
+import debounce from 'lodash/debounce';
 
 const Container = styled('div', {
   display: 'flex',
@@ -28,10 +28,14 @@ const Teams = () => {
   const { data: users, refetch: refetchUsers } = trpc.public.getUsers.useQuery();
   const { data: projects, refetch: refetchProjects } = trpc.public.getProjects.useQuery();
 
-  const handleUpdateTeamsEvent = useCallback(() => {
-    refetchUsers();
-    refetchProjects();
-  }, [refetchUsers, refetchProjects]);
+  const handleUpdateTeamsEvent = debounce(
+    () => {
+      refetchUsers();
+      refetchProjects();
+    },
+    1000,
+    { leading: true, trailing: true },
+  );
 
   const { updateTeams } = useAbly({ [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent });
 

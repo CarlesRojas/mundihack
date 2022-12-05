@@ -2,7 +2,7 @@ import BracketText from '@components/BracketText';
 import Button from '@components/Button';
 import NextLink from '@components/NextLink';
 import Text from '@components/Text';
-import useSessionUser from '@hooks/useSessionUser';
+import useSessionUser from '@server/hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { END_TIME, ROUTE } from '@utils/constants';
