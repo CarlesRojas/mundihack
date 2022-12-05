@@ -1,4 +1,5 @@
 import { protectedProcedure, router } from '@server/trpc/trpc';
+import { MAX_TEAM_SIZE } from '@utils/constants';
 import { z } from 'zod';
 export const privateRouter = router({
   getUser: protectedProcedure.query(async ({ ctx }) => {
@@ -8,10 +9,26 @@ export const privateRouter = router({
   }),
   joinOrLeaveProject: protectedProcedure.input(z.object({ projectId: z.string() })).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { id: ctx.session.user.id } });
+    const projectUsers = await ctx.prisma.user.findMany({ where: { projectId: input.projectId } });
     if (!user) return;
 
-    const remove = user.projectId === input.projectId;
+    const join = user.projectId !== input.projectId;
+    const isProjectFull = projectUsers.length >= MAX_TEAM_SIZE;
+
     if (user.projectId) await ctx.prisma.user.update({ where: { id: user.id }, data: { projectId: null } });
-    if (!remove) await ctx.prisma.user.update({ where: { id: user.id }, data: { projectId: input.projectId } });
+    if (join && !isProjectFull)
+      await ctx.prisma.user.update({ where: { id: user.id }, data: { projectId: input.projectId } });
+
+    const newProjectUsers = await ctx.prisma.user.findMany({
+      where: { projectId: input.projectId },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    // const newProjectUsers = await ctx.prisma.user.findMany({ where: { projectId: input.projectId } });
+    const numberOfUsersToKick = newProjectUsers.length > MAX_TEAM_SIZE ? newProjectUsers.length - MAX_TEAM_SIZE : 0;
+    if (numberOfUsersToKick === 0) return;
+
+    const usersToKick = newProjectUsers.slice(0, numberOfUsersToKick).map((user) => user.id);
+    await ctx.prisma.user.updateMany({ where: { id: { in: usersToKick } }, data: { projectId: null } });
   }),
 });

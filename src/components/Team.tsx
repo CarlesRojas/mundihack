@@ -1,11 +1,12 @@
+import useHover from '@hooks/useHover';
 import { useJoinProject, useLeaveProject } from '@server/hooks/useJoinOrLeaveProject';
-import useSessionUser from '@server/hooks/useSessionUser';
-import useUser from '@server/hooks/useUser';
 import { styled } from '@styles/stitches.config';
 import { MAX_TEAM_SIZE } from '@utils/constants';
 import getBoxRow from '@utils/getBoxRow';
 import parseName from '@utils/parseName';
 import type { RouterOutputs } from '@utils/trpc';
+import { trpc } from '@utils/trpc';
+import { useSession } from 'next-auth/react';
 import Text from './Text';
 
 const Container = styled('div', {
@@ -20,6 +21,11 @@ const Container = styled('div', {
         pointerEvents: 'all',
       },
     },
+    blocked: {
+      true: {
+        cursor: 'not-allowed',
+      },
+    },
   },
 });
 
@@ -29,11 +35,20 @@ interface TeamProps {
   updateTeams: () => void;
 }
 
-const Team = ({ team, index, updateTeams }: TeamProps) => {
-  const userSession = useSessionUser();
-  const user = useUser();
+const getTeamText = (index: number, isUserTeam: boolean, isTeamFull: boolean, isHovered: boolean) => {
+  if (!isHovered) return `Team ${index}`;
+  if (isUserTeam) return `Team ${index}________LEAVE`;
+  if (isTeamFull) return `Team ${index}________FULL`;
+  return `Team ${index}________JOIN`;
+};
 
+const Team = ({ team, index, updateTeams }: TeamProps) => {
+  const { data: session } = useSession();
+  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
+
+  const { hoverRef, isHovered } = useHover();
   const isUserTeam = user?.projectId === team.id;
+  const isTeamFull = team.users.length >= MAX_TEAM_SIZE;
 
   const { joinProject } = useJoinProject({ user, team, onSuccess: updateTeams });
   const { leaveProject } = useLeaveProject({ user, team, onSuccess: updateTeams });
@@ -43,14 +58,15 @@ const Team = ({ team, index, updateTeams }: TeamProps) => {
     else if (team.users.length < MAX_TEAM_SIZE) joinProject({ projectId: team.id });
   };
 
-  const teamText = { text: `Team ${index}` };
+  const teamText = { text: getTeamText(index, isUserTeam, isTeamFull, isHovered) };
   const usersText = team.users.map(({ name }) => ({ text: `[ ${parseName(name).fullName} ]` }));
 
   return (
-    <Container active={!!userSession} onClick={handleProjectClick}>
+    <Container active={!!session} blocked={isTeamFull && !isUserTeam} onClick={handleProjectClick} ref={hoverRef}>
       <Text red={isUserTeam} pre>
         {getBoxRow({ first: true, placeText: teamText }).join('')}
       </Text>
+
       <Text red={isUserTeam} pre>
         {getBoxRow({}).join('')}
       </Text>

@@ -2,7 +2,7 @@ import type { RouterOutputs } from '@utils/trpc';
 import { trpc } from '@utils/trpc';
 
 interface JoinOrLeaveProjectMutation {
-  user: RouterOutputs['private']['getUser'];
+  user?: RouterOutputs['private']['getUser'];
   team: RouterOutputs['public']['getProjects'][0];
   onSuccess: () => void;
 }

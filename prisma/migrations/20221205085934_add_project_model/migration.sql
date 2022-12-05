@@ -1,10 +1,10 @@
 -- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "githubLink" TEXT NOT NULL,
-    "projectLink" TEXT NOT NULL,
+    "name" TEXT,
+    "description" TEXT,
+    "githubLink" TEXT,
+    "projectLink" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -20,6 +20,8 @@ CREATE TABLE "User" (
     "image" TEXT,
     "projectId" TEXT,
     "votedProjectId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
