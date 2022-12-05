@@ -14,7 +14,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
-import { RiSendPlane2Fill } from 'react-icons/ri';
+import { RiSave2Fill } from 'react-icons/ri';
 
 const Container = styled('div', {
   display: 'flex',
@@ -98,9 +98,9 @@ const YourProject: NextPage = () => {
 
   const container = (children: JSX.Element) => <Container>{children}</Container>;
 
+  if (user && !user.projectId) return container(<Text>{"looks like you haven't joined a project yet"}</Text>);
   if (isLoading) return container(<Loading showLabel />);
-  if (!isLoading && !project) return container(<Text>you need to join a team to submit a project</Text>);
-  if (isError) return container(<Text yellow>there was an error getting the project information</Text>);
+  if (isError) return container(<Text yellow>{'there was an error getting the project information'}</Text>);
 
   return container(
     <>
@@ -147,14 +147,16 @@ const YourProject: NextPage = () => {
           isLoading={isUpdateProjectLoading}
         />
 
+        <div />
+
         <Button
-          label={'submit'}
+          label={project?.name ? 'update' : 'save'}
           isLoading={isUpdateProjectLoading}
           isDisabled={!isDirty || !isValid}
-          icon={<RiSendPlane2Fill />}
+          icon={<RiSave2Fill />}
         />
 
-        {isUpdateProjectError && <Text yellow>there was an error updating the project information</Text>}
+        {isUpdateProjectError && <Text yellow>{'there was an error updating the project information'}</Text>}
       </Form>
     </>,
   );
