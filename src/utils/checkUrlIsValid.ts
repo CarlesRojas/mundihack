@@ -1,7 +1,12 @@
-const checkUrlIsValid = (url: string) => {
+const isFromGithub = (url: string) => {
+  return url.includes('github.com');
+};
+
+const checkUrlIsValid = (url: string, github?: boolean) => {
   try {
     new URL(url);
-    return true;
+    if (!github) return true;
+    else return isFromGithub(url);
   } catch (err) {
     return false;
   }

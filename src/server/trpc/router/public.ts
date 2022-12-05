@@ -24,11 +24,22 @@ export const publicRouter = router({
         data: Array.from({ length: numberOfProjectsToCreate }).map(() => ({})),
       });
     else if (numberOfProjectsToCreate < 0) {
-      const projects = (await ctx.prisma.project.findMany({ select: { id: true }, orderBy: { createdAt: 'desc' } }))
-        .slice(numberOfProjectsToCreate)
-        .map(({ id }) => id);
+      const projects = (
+        await ctx.prisma.project.findMany({
+          select: { id: true, users: { select: { id: true } } },
+          orderBy: { createdAt: 'desc' },
+        })
+      ).slice(numberOfProjectsToCreate);
 
-      await ctx.prisma.project.deleteMany({ where: { id: { in: projects } } });
+      const projectsToDelete = projects.map(({ id }) => id);
+
+      for (const project of projects) {
+        if (project.users.length === 0) continue;
+        const usersToKick = project.users.map(({ id }) => id);
+        await ctx.prisma.user.updateMany({ where: { id: { in: usersToKick } }, data: { projectId: null } });
+      }
+
+      await ctx.prisma.project.deleteMany({ where: { id: { in: projectsToDelete } } });
     }
 
     return ctx.prisma.project.findMany({

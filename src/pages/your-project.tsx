@@ -1,6 +1,7 @@
 import Button from '@components/Button';
 import Input from '@components/Input';
 import Text from '@components/Text';
+import useAbly from '@hooks/useAbly';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
 import checkUrlIsValid from '@utils/checkUrlIsValid';
@@ -49,11 +50,17 @@ const YourProject: NextPage = () => {
     { enabled: !!user && !!user.projectId },
   );
 
+  const { updateTeamProject } = useAbly();
+
   const {
     mutate: updateProjectMutation,
     isLoading: isUpdateProjectLoading,
     isError: isUpdateProjectError,
-  } = trpc.private.updateProject.useMutation();
+  } = trpc.private.updateProject.useMutation({
+    onSuccess: () => {
+      updateTeamProject();
+    },
+  });
 
   const {
     register,
@@ -75,6 +82,8 @@ const YourProject: NextPage = () => {
 
   const getFormErrorMessage = (name: keyof YourProjectInputs) => errors[name] && errors[name]?.message;
   const validateLink = (link: string) => (link ? checkUrlIsValid(link) || 'must be a valid url' : true);
+  const validateLinkFromGithub = (link: string) =>
+    link ? checkUrlIsValid(link, true) || 'must be a valid github url' : true;
 
   const container = (children: JSX.Element) => <Container>{children}</Container>;
   if (!isGetProjectLoading && !project) return container(<Text>you need to join a team to submit a project</Text>);
@@ -110,7 +119,7 @@ const YourProject: NextPage = () => {
           label={'github link:'}
           register={register('githubLink', {
             required: { value: true, message: 'this field is required' },
-            validate: validateLink,
+            validate: validateLinkFromGithub,
           })}
           error={getFormErrorMessage('githubLink')}
           isLoading={isUpdateProjectLoading}

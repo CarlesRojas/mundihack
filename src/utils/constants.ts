@@ -14,9 +14,10 @@ export const ABLY_CHANNEL = 'ablyMundihack';
 export enum ABLY_EVENT {
   UPDATE_TEAMS = 'update-teams',
   UPDATE_ACTIONS = 'update-actions',
+  UPDATE_TEAM_PROJECT = 'update-team-project',
 }
 
-export const MAX_TEAM_SIZE = 1;
+export const MAX_TEAM_SIZE = 2;
 
 export enum ACTION {
   TEAM = 'team',

@@ -25,7 +25,12 @@ export const privateRouter = router({
       orderBy: { updatedAt: 'desc' },
     });
 
-    // const newProjectUsers = await ctx.prisma.user.findMany({ where: { projectId: input.projectId } });
+    if (newProjectUsers.length === 0)
+      await ctx.prisma.project.update({
+        where: { id: input.projectId },
+        data: { name: null, description: null, githubLink: null, projectLink: null },
+      });
+
     const numberOfUsersToKick = newProjectUsers.length > MAX_TEAM_SIZE ? newProjectUsers.length - MAX_TEAM_SIZE : 0;
     if (numberOfUsersToKick === 0) return;
 

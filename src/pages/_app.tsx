@@ -57,7 +57,7 @@ const Main = styled('main', {
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   globalStyles();
   const { private: privateRouter, public: publicRouter } = trpc.useContext();
-  const { getUser } = privateRouter;
+  const { getUser, getProject } = privateRouter;
   const { getProjects, getUsers, getAction } = publicRouter;
 
   const handleUpdateTeamsEvent = useCallback(() => {
@@ -70,9 +70,14 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     getAction.invalidate();
   }, [getAction]);
 
+  const handleUpdateTeamProjectEvent = useCallback(() => {
+    getProject.invalidate();
+  }, [getProject]);
+
   useAbly({
     [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent,
     [ABLY_EVENT.UPDATE_ACTIONS]: handleUpdateActionsEvent,
+    [ABLY_EVENT.UPDATE_TEAM_PROJECT]: handleUpdateTeamProjectEvent,
   });
 
   return (
