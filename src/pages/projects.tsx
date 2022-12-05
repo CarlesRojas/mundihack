@@ -14,8 +14,6 @@ const Projects: NextPage = () => {
 
   const sumbittedProjects = projects?.filter((project) => !!project.name);
 
-  console.log(sumbittedProjects);
-
   return (
     <Container>
       {sumbittedProjects && sumbittedProjects.length <= 0 && <Text>no projects have been submitted yet</Text>}
