@@ -1,11 +1,12 @@
 import Button from '@components/Button';
 import Input from '@components/Input';
+import Loading from '@components/Loading';
 import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
 import checkUrlIsValid from '@utils/checkUrlIsValid';
-import { ROUTE } from '@utils/constants';
+import { AUTH_STATUS, ROUTE } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import type { GetServerSideProps } from 'next';
 import { type NextPage } from 'next';
@@ -42,13 +43,23 @@ interface YourProjectInputs {
 }
 
 const YourProject: NextPage = () => {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
-  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
-  const { data: project, isLoading: isGetProjectLoading } = trpc.private.getProject.useQuery(
-    { projectId: user?.projectId },
-    { enabled: !!user && !!user.projectId },
-  );
+  const {
+    data: user,
+    isLoading: isGetUserLoading,
+    isError: isGetUserError,
+  } = trpc.private.getUser.useQuery(undefined, {
+    enabled: status === AUTH_STATUS.AUTHENTICATED,
+  });
+  const {
+    data: project,
+    isLoading: isGetProjectLoading,
+    isError: isGetProjectError,
+  } = trpc.private.getProject.useQuery({ projectId: user?.projectId }, { enabled: !!user && !!user.projectId });
+
+  const isError = isGetUserError || isGetProjectError;
+  const isLoading = isGetUserLoading || isGetProjectLoading;
 
   const { updateTeamProject } = useAbly();
 
@@ -86,7 +97,10 @@ const YourProject: NextPage = () => {
     link ? checkUrlIsValid(link, true) || 'must be a valid github url' : true;
 
   const container = (children: JSX.Element) => <Container>{children}</Container>;
-  if (!isGetProjectLoading && !project) return container(<Text>you need to join a team to submit a project</Text>);
+
+  if (isLoading) return container(<Loading showLabel />);
+  if (!isLoading && !project) return container(<Text>you need to join a team to submit a project</Text>);
+  if (isError) return container(<Text yellow>there was an error getting the project information</Text>);
 
   return container(
     <>
@@ -140,7 +154,7 @@ const YourProject: NextPage = () => {
           icon={<RiSendPlane2Fill />}
         />
 
-        {isUpdateProjectError && <Text yellow>there was a problem updating the project information</Text>}
+        {isUpdateProjectError && <Text yellow>there was an error updating the project information</Text>}
       </Form>
     </>,
   );

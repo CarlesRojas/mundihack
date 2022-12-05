@@ -10,13 +10,15 @@ const Container = styled('div', {
 });
 
 const Projects: NextPage = () => {
-  const { data: projects } = trpc.public.getProjects.useQuery();
+  const { data: projects, isError: isGetProjectsError } = trpc.public.getProjects.useQuery();
 
   const sumbittedProjects = projects?.filter((project) => !!project.name);
 
   return (
     <Container>
       {sumbittedProjects && sumbittedProjects.length <= 0 && <Text>no projects have been submitted yet</Text>}
+
+      {isGetProjectsError && <Text yellow>there was an error getting the projects</Text>}
     </Container>
   );
 };

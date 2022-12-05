@@ -1,6 +1,8 @@
+import type { ComponentProps } from '@stitches/react';
 import { keyframes } from '@stitches/react';
 import { styled } from '@styles/stitches.config';
 import { RiLoaderFill } from 'react-icons/ri';
+import Text from './Text';
 
 const spin = keyframes({
   '0%': { transform: 'rotate(0deg)' },
@@ -8,13 +10,25 @@ const spin = keyframes({
 });
 
 const Spinner = styled('div', {
-  animation: `${spin} 2s linear infinite`,
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+
+  svg: {
+    fontSize: '1.5rem',
+    animation: `${spin} 2s linear infinite`,
+  },
 });
 
-const Loading = () => {
+interface LoadingProps extends ComponentProps<typeof Spinner> {
+  showLabel?: boolean;
+}
+
+const Loading = ({ showLabel, ...rest }: LoadingProps) => {
   return (
-    <Spinner>
+    <Spinner {...rest}>
       <RiLoaderFill />
+      {showLabel && <Text>loading...</Text>}
     </Spinner>
   );
 };

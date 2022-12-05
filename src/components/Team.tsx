@@ -1,11 +1,10 @@
 import useHover from '@hooks/useHover';
 import { useJoinProject, useLeaveProject } from '@server/hooks/useJoinOrLeaveProject';
 import { styled } from '@styles/stitches.config';
-import { MAX_TEAM_SIZE } from '@utils/constants';
+import { AUTH_STATUS, MAX_TEAM_SIZE } from '@utils/constants';
 import getBoxRow from '@utils/getBoxRow';
 import parseName from '@utils/parseName';
 import type { RouterOutputs } from '@utils/trpc';
-import { trpc } from '@utils/trpc';
 import { useSession } from 'next-auth/react';
 import Text from './Text';
 
@@ -34,6 +33,7 @@ interface TeamProps {
   index: number;
   updateTeams: () => void;
   active?: boolean;
+  user?: RouterOutputs['private']['getUser'];
 }
 
 const getTeamText = (index: number, isUserTeam: boolean, isTeamFull: boolean, isHovered: boolean) => {
@@ -43,9 +43,8 @@ const getTeamText = (index: number, isUserTeam: boolean, isTeamFull: boolean, is
   return `Team ${index}________JOIN`;
 };
 
-const Team = ({ team, index, updateTeams, active }: TeamProps) => {
-  const { data: session } = useSession();
-  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
+const Team = ({ team, index, updateTeams, active, user }: TeamProps) => {
+  const { status } = useSession();
 
   const { hoverRef, isHovered } = useHover();
   const isUserTeam = user?.projectId === team.id;
@@ -64,7 +63,7 @@ const Team = ({ team, index, updateTeams, active }: TeamProps) => {
 
   return (
     <Container
-      active={active && !!session}
+      active={active && status === AUTH_STATUS.AUTHENTICATED}
       blocked={isTeamFull && !isUserTeam}
       onClick={handleProjectClick}
       ref={hoverRef}

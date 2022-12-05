@@ -1,9 +1,10 @@
 import BracketText from '@components/BracketText';
+import Loading from '@components/Loading';
 import Team from '@components/Team';
 import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
-import { ACTION } from '@utils/constants';
+import { ACTION, AUTH_STATUS } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { trpc } from '@utils/trpc';
 import type { NextPage } from 'next';
@@ -31,21 +32,35 @@ const Wrap = styled('ul', {
 });
 
 const Teams: NextPage = () => {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
-  const { data: teamAction } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
-  const { data: users } = trpc.public.getUsers.useQuery();
-  const { data: projects } = trpc.public.getProjects.useQuery();
-  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
+  const { data: teamAction, isError: isTeamActionError } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
+  const { data: users, isError: isUsersError } = trpc.public.getUsers.useQuery();
+  const { data: projects, isError: isProjectsError } = trpc.public.getProjects.useQuery();
+  const {
+    data: user,
+    isError: isUserError,
+    isLoading: isGetUserLoading,
+  } = trpc.private.getUser.useQuery(undefined, { enabled: status === AUTH_STATUS.AUTHENTICATED });
+
+  const isError = isTeamActionError || isUsersError || isProjectsError || isUserError;
 
   const { updateTeams } = useAbly();
   const usersWithoutATeam = users?.filter(({ projectId }) => !projectId);
+
+  if (status !== AUTH_STATUS.UNAUTHENTICATED && isGetUserLoading)
+    return (
+      <Container>
+        <Loading showLabel />
+      </Container>
+    );
 
   return (
     <Container>
       <Wrap bigGap>
         {projects?.map((project, i) => (
           <Team
+            user={user}
             key={project.id}
             active={teamAction?.allowed}
             team={project}
@@ -62,6 +77,8 @@ const Teams: NextPage = () => {
           <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
         ))}
       </Wrap>
+
+      {isError && <Text yellow>there was an error getting the teams</Text>}
     </Container>
   );
 };

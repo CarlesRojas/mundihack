@@ -31,3 +31,9 @@ export const defaultActions: { [key in ACTION]: boolean } = {
   [ACTION.VOTE]: false,
   [ACTION.PROJECT]: false,
 };
+
+export enum AUTH_STATUS {
+  AUTHENTICATED = 'authenticated',
+  UNAUTHENTICATED = 'unauthenticated',
+  LOADING = 'loading',
+}

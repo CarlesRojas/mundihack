@@ -1,4 +1,6 @@
 import Button from '@components/Button';
+import Loading from '@components/Loading';
+import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
@@ -24,9 +26,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Admin: NextPage = () => {
   const utils = trpc.useContext();
 
-  const { data: teamAction } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
-  const { data: voteAction } = trpc.public.getAction.useQuery({ name: ACTION.VOTE });
-  const { data: projectAction } = trpc.public.getAction.useQuery({ name: ACTION.PROJECT });
+  const { data: teamAction, isError: isTeamActionError } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
+  const { data: voteAction, isError: isVoteActionError } = trpc.public.getAction.useQuery({ name: ACTION.VOTE });
+  const { data: projectAction, isError: isProjectActionError } = trpc.public.getAction.useQuery({
+    name: ACTION.PROJECT,
+  });
+
+  const isError = isTeamActionError || isVoteActionError || isProjectActionError;
 
   const teamActionAllowed = teamAction?.allowed ?? false;
   const voteActionAllowed = voteAction?.allowed ?? false;
@@ -34,7 +40,11 @@ const Admin: NextPage = () => {
 
   const { updateActions } = useAbly();
 
-  const { mutate: updateActionMutation } = trpc.private.setAction.useMutation({
+  const {
+    mutate: updateActionMutation,
+    isLoading: isUpdateActionLoading,
+    isError: isUpdateActionError,
+  } = trpc.private.setAction.useMutation({
     onSuccess: () => {
       updateActions();
     },
@@ -67,21 +77,28 @@ const Admin: NextPage = () => {
     <Container>
       <Button
         icon={<RiTeamFill />}
+        isDisabled={isUpdateActionLoading}
         label={teamActionAllowed ? 'Stop team building' : 'Start team building'}
         onClick={() => handleSetAction(ACTION.TEAM, !teamActionAllowed)}
       />
 
       <Button
         icon={<RiMailFill />}
+        isDisabled={isUpdateActionLoading}
         label={voteActionAllowed ? 'Stop vote' : 'Start vote'}
         onClick={() => handleSetAction(ACTION.VOTE, !voteActionAllowed)}
       />
 
       <Button
         icon={<RiSendPlane2Fill />}
+        isDisabled={isUpdateActionLoading}
         label={projectActionAllowed ? 'Stop project submitions' : 'Start project submitions'}
         onClick={() => handleSetAction(ACTION.PROJECT, !projectActionAllowed)}
       />
+
+      {isUpdateActionLoading && <Loading />}
+      {isError && <Text yellow>there was an error getting the actions</Text>}
+      {isUpdateActionError && <Text yellow>there was an error updating the action</Text>}
     </Container>
   );
 };
