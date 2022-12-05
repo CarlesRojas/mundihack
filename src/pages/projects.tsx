@@ -1,5 +1,6 @@
 import { styled } from '@styles/stitches.config';
-import { type NextPage } from 'next';
+import { trpc } from '@utils/trpc';
+import type { NextPage } from 'next';
 
 const Container = styled('div', {
   display: 'flex',
@@ -8,6 +9,8 @@ const Container = styled('div', {
 });
 
 const Projects: NextPage = () => {
+  const { data: projects, refetch: refetchProjects } = trpc.public.getProjects.useQuery();
+
   return <Container></Container>;
 };
 

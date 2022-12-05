@@ -23,7 +23,7 @@ const Container = styled('div', {
     },
     blocked: {
       true: {
-        cursor: 'not-allowed',
+        cursor: 'not-allowed !important',
       },
     },
   },

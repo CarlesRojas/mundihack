@@ -3,14 +3,17 @@ import Effects from '@components/Effects';
 import Footer from '@components/Footer';
 import Header from '@components/Header';
 import { env } from '@env/client.mjs';
+import useAbly from '@hooks/useAbly';
 import globalStyles from '@styles/global';
 import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
+import { ABLY_EVENT } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import Head from 'next/head';
+import { useCallback } from 'react';
 
 configureAbly({ authUrl: `${env.NEXT_PUBLIC_HOSTNAME}/api/ably/createToken` });
 
@@ -53,6 +56,24 @@ const Main = styled('main', {
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   globalStyles();
+  const { private: privateRouter, public: publicRouter } = trpc.useContext();
+  const { getUser } = privateRouter;
+  const { getProjects, getUsers, getAction } = publicRouter;
+
+  const handleUpdateTeamsEvent = useCallback(() => {
+    getUsers.invalidate();
+    getProjects.invalidate();
+    getUser.invalidate();
+  }, [getUsers, getProjects, getUser]);
+
+  const handleUpdateActionsEvent = useCallback(() => {
+    getAction.invalidate();
+  }, [getAction]);
+
+  useAbly({
+    [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent,
+    [ABLY_EVENT.UPDATE_ACTIONS]: handleUpdateActionsEvent,
+  });
 
   return (
     <>

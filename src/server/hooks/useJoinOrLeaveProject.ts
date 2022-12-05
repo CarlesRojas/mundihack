@@ -22,6 +22,7 @@ export const useJoinProject = ({ user, team, onSuccess }: JoinOrLeaveProjectMuta
       const previousUser = utils.private.getUser.getData();
       const previousUsers = utils.public.getUsers.getData();
       const previousProjects = utils.public.getProjects.getData();
+      const prevUserProject = previousUser?.projectId;
 
       if (previousUser) {
         const newUser = { ...previousUser, projectId: team.id };
@@ -38,6 +39,9 @@ export const useJoinProject = ({ user, team, onSuccess }: JoinOrLeaveProjectMuta
 
       if (previousProjects) {
         const newProjects = previousProjects.map((previousProject) => {
+          if (previousProject.id === prevUserProject)
+            return { ...previousProject, users: previousProject.users.filter(({ id }) => id !== user.id) };
+
           return previousProject.id === team.id
             ? { ...previousProject, users: [...previousProject.users, { id: user.id, name: user.name }] }
             : previousProject;

@@ -2,11 +2,10 @@ import Button from '@components/Button';
 import useAbly from '@hooks/useAbly';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
-import { ABLY_EVENT, ACTION, ROUTE } from '@utils/constants';
+import { ACTION, ROUTE } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import type { GetServerSideProps } from 'next';
 import { type NextPage } from 'next';
-import { useCallback } from 'react';
 import { RiMailFill, RiTeamFill } from 'react-icons/ri';
 
 const Container = styled('div', {
@@ -25,31 +24,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Admin: NextPage = () => {
   const utils = trpc.useContext();
 
-  const { data: teamAction, refetch: refatchTeam } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
-  const { data: voteAction, refetch: refatchVote } = trpc.public.getAction.useQuery({ name: ACTION.VOTE });
-  const { data: projectAction, refetch: refatchAction } = trpc.public.getAction.useQuery({ name: ACTION.PROJECT });
+  const { data: teamAction } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
+  const { data: voteAction } = trpc.public.getAction.useQuery({ name: ACTION.VOTE });
+  const { data: projectAction } = trpc.public.getAction.useQuery({ name: ACTION.PROJECT });
 
   const teamActionAllowed = teamAction?.allowed ?? false;
   const voteActionAllowed = voteAction?.allowed ?? false;
   const projectActionAllowed = projectAction?.allowed ?? false;
 
-  const handleUpdateActionsEvent = useCallback(
-    (action?: ACTION) => {
-      if (action === ACTION.TEAM) refatchTeam();
-      else if (action === ACTION.VOTE) refatchVote();
-      else if (action === ACTION.PROJECT) refatchAction();
-      else {
-        refatchTeam();
-        refatchVote();
-        refatchAction();
-      }
-    },
-    [refatchTeam, refatchVote, refatchAction],
-  );
-
-  const { updateActions } = useAbly({
-    [ABLY_EVENT.UPDATE_ACTIONS]: handleUpdateActionsEvent,
-  });
+  const { updateActions } = useAbly();
 
   const { mutate: updateActionMutation } = trpc.private.setAction.useMutation({
     onSuccess: () => {
