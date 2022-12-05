@@ -6,6 +6,7 @@ export enum ROUTE {
   TEAMS = '/teams',
   PROJECTS = '/projects',
   YOUR_PROJECT = '/your-project',
+  ADMIN = '/admin',
 }
 
 export const ABLY_CHANNEL = 'ablyMundihack';

@@ -1,13 +1,19 @@
 import { env } from '@env/server.mjs';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@server/db/client';
+import type { User } from 'next-auth';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+
+type ExtendedUser = User & { isAdmin: boolean };
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user }) {
-      if (session.user) session.user.id = user.id;
+      if (session.user) {
+        session.user.id = user.id;
+        session.user.isAdmin = (user as ExtendedUser).isAdmin;
+      }
       return session;
     },
   },

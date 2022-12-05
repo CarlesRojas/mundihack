@@ -116,6 +116,17 @@ const Header = () => {
               />
             </NextLink>
           )}
+
+          {user && user.isAdmin && (
+            <NextLink href={ROUTE.ADMIN}>
+              <BracketText
+                text="admin"
+                red={router.pathname === ROUTE.ADMIN}
+                selected={router.pathname === ROUTE.ADMIN}
+                hover
+              />
+            </NextLink>
+          )}
         </Links>
       </Main>
 

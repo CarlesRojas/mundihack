@@ -8,10 +8,8 @@ const useSessionUser = () => {
   const parsedName = parseName(sessionData.user.name);
 
   return {
-    email: sessionData.user.email,
+    ...sessionData.user,
     ...parsedName,
-    image: sessionData.user.image,
-    id: sessionData.user.id,
   };
 };
 

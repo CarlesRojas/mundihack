@@ -49,8 +49,6 @@ const Teams = () => {
 
   return (
     <Container>
-      <Text>{'click a team to join it'}</Text>
-
       <Wrap bigGap>
         {projects?.map((project, i) => (
           <Team key={project.id} team={project} index={i + 1} updateTeams={updateTeams}></Team>
