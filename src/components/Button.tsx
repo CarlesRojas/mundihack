@@ -2,6 +2,7 @@ import Text from '@components/Text';
 import { mouse } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import type { ComponentPropsWithoutRef } from 'react';
+import Loading from './Loading';
 
 const OldButton = styled('button', {
   fontSize: '2rem',
@@ -33,18 +34,35 @@ const OldButton = styled('button', {
     color: 'black',
     fontSize: '1.5rem',
   },
+
+  variants: {
+    disabled: {
+      true: {
+        pointerEvents: 'none',
+        opacity: '0.5',
+      },
+    },
+  },
 });
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   icon: JSX.Element;
   label: string;
+  isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
-const Button = ({ icon, label, ...rest }: ButtonProps) => {
+const Button = ({ icon, label, isDisabled, isLoading, ...rest }: ButtonProps) => {
   return (
-    <OldButton {...rest}>
-      {icon}
-      <Text css={{ color: 'black' }}>{label}</Text>
+    <OldButton disabled={isDisabled} {...rest}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {icon}
+          <Text css={{ color: 'black' }}>{label}</Text>
+        </>
+      )}
     </OldButton>
   );
 };

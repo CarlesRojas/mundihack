@@ -31,12 +31,12 @@ const Wrap = styled('ul', {
 });
 
 const Teams: NextPage = () => {
-  const { data } = useSession();
+  const { data: session } = useSession();
 
   const { data: teamAction } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
   const { data: users } = trpc.public.getUsers.useQuery();
   const { data: projects } = trpc.public.getProjects.useQuery();
-  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!data });
+  const { data: user } = trpc.private.getUser.useQuery(undefined, { enabled: !!session });
 
   const { updateTeams } = useAbly();
   const usersWithoutATeam = users?.filter(({ projectId }) => !projectId);

@@ -9,6 +9,13 @@ const Text = styled('p', {
     red: {
       true: {
         color: '$red',
+        opacity: '1 !important',
+      },
+    },
+    yellow: {
+      true: {
+        color: '$yellow',
+        opacity: '1 !important',
       },
     },
     pre: {
@@ -33,6 +40,11 @@ const Text = styled('p', {
             textDecoration: 'underline',
           },
         },
+      },
+    },
+    low: {
+      true: {
+        opacity: 0.5,
       },
     },
   },

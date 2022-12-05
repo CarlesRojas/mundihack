@@ -6,12 +6,14 @@ export const publicRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.session;
   }),
+
   getUsers: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany({
       select: { id: true, email: true, name: true, projectId: true, votedProjectId: true },
       orderBy: { name: 'asc' },
     });
   }),
+
   getProjects: publicProcedure.query(async ({ ctx }) => {
     const numberOfUsers = await ctx.prisma.user.count();
     const expectedNumberOfProjects = Math.ceil(numberOfUsers / MAX_TEAM_SIZE);
@@ -42,6 +44,7 @@ export const publicRouter = router({
       orderBy: { createdAt: 'asc' },
     });
   }),
+
   getAction: publicProcedure.input(z.object({ name: z.string() })).query(async ({ ctx, input }) => {
     const actions = await ctx.prisma.action.findMany({ where: { name: input.name } });
     if (actions.length === 0) return await ctx.prisma.action.create({ data: { name: input.name, allowed: false } });

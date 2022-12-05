@@ -27,7 +27,7 @@ const globalStyles = globalCss({
     width: '100%',
     backgroundColor: '$background',
     color: '$text',
-    fontFamily: "'Fira Mono', monospace",
+    fontFamily: '$main',
     fontSize: '$main',
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
@@ -82,15 +82,33 @@ const globalStyles = globalCss({
     outline: 'none',
   },
 
+  '::selection': {
+    background: '#4f4f4f',
+  },
+
   '::-moz-focus-inner': {
     border: 0,
   },
 
   input: {
     border: 'none',
+    fontFamily: '$main',
+  },
+
+  textarea: {
+    border: 'none',
+    fontFamily: '$main',
+    resize: 'none',
+    height: 'fit-content',
   },
 
   'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+    margin: 0,
+    '-webkit-appearance': 'none',
+    appearance: 'none',
+  },
+
+  'textarea::-webkit-outer-spin-button, textarea::-webkit-inner-spin-button': {
     margin: 0,
     '-webkit-appearance': 'none',
     appearance: 'none',

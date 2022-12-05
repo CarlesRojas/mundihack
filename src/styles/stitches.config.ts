@@ -6,12 +6,13 @@ export const { styled, css, globalCss, getCssText } = createStitches({
       background: '#393939', //'#171717',
       text: 'white',
       red: '#ED0022',
+      yellow: '#F9D71C',
     },
     fontSizes: {
       main: '16px',
     },
     fonts: {
-      main: 'Montserrat, sans-serif',
+      main: "'Fira Mono', monospace",
     },
   },
 });

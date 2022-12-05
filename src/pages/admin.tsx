@@ -6,7 +6,7 @@ import { ACTION, ROUTE } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import type { GetServerSideProps } from 'next';
 import { type NextPage } from 'next';
-import { RiMailFill, RiTeamFill } from 'react-icons/ri';
+import { RiMailFill, RiSendPlane2Fill, RiTeamFill } from 'react-icons/ri';
 
 const Container = styled('div', {
   display: 'flex',
@@ -78,7 +78,7 @@ const Admin: NextPage = () => {
       />
 
       <Button
-        icon={<RiTeamFill />}
+        icon={<RiSendPlane2Fill />}
         label={projectActionAllowed ? 'Stop project submitions' : 'Start project submitions'}
         onClick={() => handleSetAction(ACTION.PROJECT, !projectActionAllowed)}
       />

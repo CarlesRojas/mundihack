@@ -3,14 +3,15 @@ import { MAX_TEAM_SIZE } from '@utils/constants';
 import { z } from 'zod';
 export const privateRouter = router({
   getUser: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx.session?.user) return null;
+    if (!ctx.session?.user) throw new Error("can't find the user");
     const user = await ctx.prisma.user.findUnique({ where: { id: ctx.session.user.id } });
     return user;
   }),
+
   joinOrLeaveProject: protectedProcedure.input(z.object({ projectId: z.string() })).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { id: ctx.session.user.id } });
     const projectUsers = await ctx.prisma.user.findMany({ where: { projectId: input.projectId } });
-    if (!user) return;
+    if (!user) throw new Error("can't find the user");
 
     const join = user.projectId !== input.projectId;
     const isProjectFull = projectUsers.length >= MAX_TEAM_SIZE;
@@ -37,5 +38,35 @@ export const privateRouter = router({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.isAdmin)
         await ctx.prisma.action.updateMany({ where: { name: input.action }, data: { allowed: input.allowed } });
+    }),
+
+  getProject: protectedProcedure
+    .input(z.object({ projectId: z.string().nullish().optional() }))
+    .query(async ({ ctx, input }) => {
+      if (!input.projectId) throw new Error("can't find the project");
+      return await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
+    }),
+
+  updateProject: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string().nullish().optional(),
+        name: z.string(),
+        description: z.string(),
+        githubLink: z.string(),
+        projectLink: z.string().optional().nullish(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!input.projectId) throw new Error("can't find the project");
+      await ctx.prisma.project.update({
+        where: { id: input.projectId },
+        data: {
+          name: input.name,
+          description: input.description,
+          githubLink: input.githubLink,
+          projectLink: input.projectLink,
+        },
+      });
     }),
 });

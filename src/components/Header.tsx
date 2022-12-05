@@ -1,7 +1,6 @@
 import BracketText from '@components/BracketText';
 import Button from '@components/Button';
 import NextLink from '@components/NextLink';
-import Text from '@components/Text';
 import useSessionUser from '@server/hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
@@ -9,6 +8,7 @@ import { ROUTE } from '@utils/constants';
 import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { RiGoogleFill } from 'react-icons/ri';
+import Text from './Text';
 
 const Container = styled('header', {
   width: '100%',
@@ -52,13 +52,16 @@ const Links = styled('div', {
   gap: '0.5rem 1rem',
 });
 
+const User = styled('div', {
+  height: 'fit-content',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+});
+
 const Header = () => {
   const user = useSessionUser();
   const router = useRouter();
-
-  const greeting = user
-    ? `welcome to the first mundimoto hackathon, ${user.firstName}!`
-    : 'welcome to the first mundimoto hackathon!';
 
   return (
     <Container>
@@ -67,8 +70,6 @@ const Header = () => {
           <LogoText red>{'<mundi>'}</LogoText>
           <LogoText>{'hack'}</LogoText>
         </Logo>
-
-        <Text css={{}}>{greeting}</Text>
 
         <Links>
           <NextLink href={ROUTE.CALENDAR}>
@@ -123,7 +124,12 @@ const Header = () => {
       </Main>
 
       {!user && <Button icon={<RiGoogleFill />} label={'log in with google'} onClick={() => signIn('google')} />}
-      {user && <Button icon={<RiGoogleFill />} label={'log out'} onClick={() => signOut()} />}
+      {user && (
+        <User>
+          <Button icon={<RiGoogleFill />} label={'log out'} onClick={() => signOut()} />
+          <Text>{user.fullName ?? ''}</Text>
+        </User>
+      )}
     </Container>
   );
 };
