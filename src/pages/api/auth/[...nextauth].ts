@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      httpOptions: { timeout: 50000 },
       authorization: {
         params: {
           prompt: 'consent',

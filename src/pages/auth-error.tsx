@@ -1,9 +1,11 @@
 import Button from '@components/Button';
 import Text from '@components/Text';
 import { env } from '@env/client.mjs';
+import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
-import type { NextPage } from 'next';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { ROUTE } from '@utils/constants';
+import type { GetServerSideProps, NextPage } from 'next';
+import { signIn, signOut } from 'next-auth/react';
 import { useEffect } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
 
@@ -16,11 +18,18 @@ const Container = styled('div', {
   gap: '1rem',
 });
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerAuthSession(context);
+  console.log(session);
+
+  if (session) return { redirect: { destination: ROUTE.CALENDAR, permanent: false } };
+  return { props: {} };
+};
+
 const Projects: NextPage = () => {
-  const { data: session } = useSession();
   useEffect(() => {
-    if (!session) signOut({ redirect: false });
-  }, [session]);
+    signOut({ redirect: false });
+  }, []);
 
   return (
     <Container>
