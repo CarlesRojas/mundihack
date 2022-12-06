@@ -65,7 +65,7 @@ const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount
 
       <Inline>
         <Text red={isFocused}>{'>'}</Text>
-        <StyledInput id={id} type="text" disabled={isLoading || isDisabled} {...register} />
+        <StyledInput id={id} type="text" disabled={isLoading || isDisabled} {...register} autoComplete="off" />
       </Inline>
     </Container>
   );

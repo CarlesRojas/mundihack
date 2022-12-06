@@ -110,7 +110,7 @@ const YourProject: NextPage = () => {
           : 'remember to fill your project information before the time runs out'}
       </Text>
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Input
           id={'name'}
           label={'project name:'}
