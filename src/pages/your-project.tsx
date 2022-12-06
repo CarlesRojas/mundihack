@@ -6,7 +6,7 @@ import useAbly from '@hooks/useAbly';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { styled } from '@styles/stitches.config';
 import checkUrlIsValid from '@utils/checkUrlIsValid';
-import { AUTH_STATUS, ROUTE } from '@utils/constants';
+import { ACTION, AUTH_STATUS, ROUTE } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import type { GetServerSideProps } from 'next';
 import { type NextPage } from 'next';
@@ -26,6 +26,15 @@ const Form = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
+  pointerEvents: 'none',
+
+  variants: {
+    active: {
+      true: {
+        pointerEvents: 'all',
+      },
+    },
+  },
 });
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -45,6 +54,7 @@ interface YourProjectInputs {
 const YourProject: NextPage = () => {
   const { status } = useSession();
 
+  const { data: submitAction, isError: isSubmitActionError } = trpc.public.getAction.useQuery({ name: ACTION.PROJECT });
   const {
     data: user,
     isLoading: isGetUserLoading,
@@ -60,6 +70,7 @@ const YourProject: NextPage = () => {
 
   const isError = isGetUserError || isGetProjectError;
   const isLoading = isGetUserLoading || isGetProjectLoading;
+  const canSumbit = status === AUTH_STATUS.AUTHENTICATED && submitAction?.allowed && !isSubmitActionError;
 
   const { updateTeamProject } = useAbly();
 
@@ -104,13 +115,17 @@ const YourProject: NextPage = () => {
 
   return container(
     <>
-      <Text>
-        {project?.name
-          ? 'all set! you can update this at any point before the time runs out'
-          : 'remember to fill your project information before the time runs out'}
-      </Text>
+      {canSumbit && (
+        <Text>
+          {project?.name
+            ? 'all set! you can update this at any point before the time runs out'
+            : 'remember to fill your project information before the time runs out'}
+        </Text>
+      )}
 
-      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+      {!canSumbit && <Text>{'submissions are closed'}</Text>}
+
+      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off" active={canSumbit}>
         <Input
           id={'name'}
           label={'project name:'}
@@ -118,6 +133,7 @@ const YourProject: NextPage = () => {
           register={register('name', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('name')}
           isLoading={isUpdateProjectLoading}
+          isDisabled={!canSumbit}
           maxLength={20}
         />
 
@@ -127,6 +143,7 @@ const YourProject: NextPage = () => {
           register={register('description', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('description')}
           isLoading={isUpdateProjectLoading}
+          isDisabled={!canSumbit}
           maxLength={200}
         />
 
@@ -139,6 +156,7 @@ const YourProject: NextPage = () => {
           })}
           error={getFormErrorMessage('githubLink')}
           isLoading={isUpdateProjectLoading}
+          isDisabled={!canSumbit}
         />
 
         <Input
@@ -147,16 +165,19 @@ const YourProject: NextPage = () => {
           register={register('projectLink', { validate: validateLink })}
           error={getFormErrorMessage('projectLink')}
           isLoading={isUpdateProjectLoading}
+          isDisabled={!canSumbit}
         />
 
         <div />
 
-        <Button
-          label={project?.name ? 'update' : 'save'}
-          isLoading={isUpdateProjectLoading}
-          isDisabled={!isDirty || !isValid}
-          icon={<RiSave2Fill />}
-        />
+        {canSumbit && (
+          <Button
+            label={project?.name ? 'update' : 'save'}
+            isLoading={isUpdateProjectLoading}
+            isDisabled={!isDirty || !isValid}
+            icon={<RiSave2Fill />}
+          />
+        )}
 
         {isUpdateProjectError && <Text yellow>{'there was an error updating the project information'}</Text>}
       </Form>

@@ -31,12 +31,14 @@ const StyledInput = styled('input', {
   fontSize: '1.1rem',
   fontWeight: '500',
   color: '$white',
+  pointerEvents: 'none',
+  opacity: '0.5',
 
   variants: {
-    disabled: {
+    active: {
       true: {
-        pointerEvents: 'none',
-        opacity: '0.5',
+        pointerEvents: 'all',
+        opacity: '1',
       },
     },
   },
@@ -75,6 +77,7 @@ const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount
           id={id}
           type="text"
           disabled={isLoading || isDisabled}
+          active={!isLoading && !isDisabled}
           autoComplete="off"
           {...register}
           {...rest}

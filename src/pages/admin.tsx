@@ -83,17 +83,17 @@ const Admin: NextPage = () => {
       />
 
       <Button
-        icon={<RiMailFill />}
-        isDisabled={isUpdateActionLoading}
-        label={voteActionAllowed ? 'Stop vote' : 'Start vote'}
-        onClick={() => handleSetAction(ACTION.VOTE, !voteActionAllowed)}
-      />
-
-      <Button
         icon={<RiSendPlane2Fill />}
         isDisabled={isUpdateActionLoading}
         label={projectActionAllowed ? 'Stop project submitions' : 'Start project submitions'}
         onClick={() => handleSetAction(ACTION.PROJECT, !projectActionAllowed)}
+      />
+
+      <Button
+        icon={<RiMailFill />}
+        isDisabled={isUpdateActionLoading}
+        label={voteActionAllowed ? 'Stop vote' : 'Start vote'}
+        onClick={() => handleSetAction(ACTION.VOTE, !voteActionAllowed)}
       />
 
       {isUpdateActionLoading && <Loading />}
