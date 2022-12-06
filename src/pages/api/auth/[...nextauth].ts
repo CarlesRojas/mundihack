@@ -17,6 +17,16 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ account, profile }) {
+      if (account?.provider === 'google')
+        return (
+          profile?.email?.endsWith('mundimoto.com') ||
+          profile?.email?.endsWith('compramostumoto.es') ||
+          profile?.email === 'crojasdomenech@gmail.com'
+        );
+
+      return false;
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [

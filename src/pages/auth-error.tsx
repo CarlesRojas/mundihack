@@ -6,6 +6,7 @@ import { styled } from '@styles/stitches.config';
 import { ROUTE } from '@utils/constants';
 import type { GetServerSideProps, NextPage } from 'next';
 import { signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
 
@@ -25,10 +26,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: {} };
 };
 
-const Projects: NextPage = () => {
+const AuthError: NextPage = () => {
+  const { query } = useRouter();
+  const { error } = query;
+
   useEffect(() => {
     signOut({ redirect: false });
   }, []);
+
+  const accessDenied = error === 'AccessDenied';
+
+  if (accessDenied)
+    return (
+      <Container>
+        <Text>you can only log in with a mundimoto account</Text>
+      </Container>
+    );
 
   return (
     <Container>
@@ -42,4 +55,4 @@ const Projects: NextPage = () => {
   );
 };
 
-export default Projects;
+export default AuthError;
