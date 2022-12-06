@@ -70,7 +70,7 @@ const Teams: NextPage = () => {
         ))}
       </Wrap>
 
-      {usersWithoutATeam && usersWithoutATeam.length > 0 && <Text>{'participants without team:'}</Text>}
+      {usersWithoutATeam && usersWithoutATeam.length > 0 && <Text>{'participants without a team:'}</Text>}
 
       <Wrap>
         {usersWithoutATeam?.map(({ id, name }) => (
