@@ -72,7 +72,8 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   const handleUpdateTeamProjectEvent = useCallback(() => {
     getProject.invalidate();
-  }, [getProject]);
+    getProjects.invalidate();
+  }, [getProject, getProjects]);
 
   useAbly({
     [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent,

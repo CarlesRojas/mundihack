@@ -118,6 +118,7 @@ const YourProject: NextPage = () => {
           register={register('name', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('name')}
           isLoading={isUpdateProjectLoading}
+          maxLength={20}
         />
 
         <Input
@@ -126,6 +127,7 @@ const YourProject: NextPage = () => {
           register={register('description', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('description')}
           isLoading={isUpdateProjectLoading}
+          maxLength={200}
         />
 
         <Input

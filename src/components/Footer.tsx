@@ -1,7 +1,7 @@
 import Text from '@components/Text';
 import useResize from '@hooks/useResize';
 import { styled } from '@styles/stitches.config';
-import { END_TIME, START_TIME } from '@utils/constants';
+import { CHARACTER_WIDTH, END_TIME, START_TIME } from '@utils/constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const Container = styled('footer', {
@@ -45,7 +45,7 @@ const Footer = () => {
   useResize(() => {
     const newBarLength = progressBarRef.current?.offsetWidth;
     if (!newBarLength) return;
-    setBarLength(Math.floor(newBarLength / 11));
+    setBarLength(Math.floor(newBarLength / CHARACTER_WIDTH));
   }, true);
 
   const progressArray = Array.from({ length: barLength }, () => null);

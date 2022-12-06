@@ -20,7 +20,6 @@ const Container = styled('div', {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
-  console.log(session);
 
   if (session) return { redirect: { destination: ROUTE.CALENDAR, permanent: false } };
   return { props: {} };

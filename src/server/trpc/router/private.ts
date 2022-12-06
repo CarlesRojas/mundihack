@@ -74,4 +74,20 @@ export const privateRouter = router({
         },
       });
     }),
+
+  vote: protectedProcedure
+    .input(z.object({ projectId: z.string(), remove: z.boolean().default(false) }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.remove)
+        return await ctx.prisma.user.update({ where: { id: ctx.session.user.id }, data: { votedProjectId: null } });
+
+      const user = await ctx.prisma.user.findUnique({ where: { id: ctx.session.user.id } });
+      if (!user) throw new Error("can't find the user");
+      if (user.projectId === input.projectId) throw new Error("can't vote for your own project");
+
+      const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
+      if (!project) throw new Error("can't find the project");
+
+      return await ctx.prisma.user.update({ where: { id: user.id }, data: { votedProjectId: input.projectId } });
+    }),
 });

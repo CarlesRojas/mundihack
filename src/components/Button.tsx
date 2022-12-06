@@ -15,6 +15,7 @@ const OldButton = styled('button', {
   height: 'fit-content',
   boxShadow: 'inset 0 -0.6rem 0 0 hsla(0, 0%, 0%, 0.5)',
   width: 'fit-content',
+  minWidth: 'fit-content',
 
   [mouse]: {
     '&:hover': {

@@ -1,6 +1,7 @@
 import useDidMount from '@hooks/useDidMount';
 import useFocus from '@hooks/useFocus';
 import { styled } from '@styles/stitches.config';
+import type { ComponentPropsWithoutRef } from 'react';
 import type { UseFormRegisterReturn } from 'react-hook-form';
 import Text from './Text';
 
@@ -15,6 +16,10 @@ const Container = styled('div', {
 const Inline = styled('div', {
   display: 'flex',
   gap: '0.5rem',
+});
+
+const Tab = styled('div', {
+  width: '1rem',
 });
 
 const StyledInput = styled('input', {
@@ -37,7 +42,7 @@ const StyledInput = styled('input', {
   },
 });
 
-export interface InputProps {
+export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   id: string;
   label: string;
   error?: string;
@@ -47,7 +52,7 @@ export interface InputProps {
   focusOnMount?: boolean;
 }
 
-const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount }: InputProps) => {
+const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount, ...rest }: InputProps) => {
   const { focusRef, isFocused } = useFocus(focusOnMount);
 
   useDidMount(() => {
@@ -64,8 +69,16 @@ const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount
       </Inline>
 
       <Inline>
+        <Tab />
         <Text red={isFocused}>{'>'}</Text>
-        <StyledInput id={id} type="text" disabled={isLoading || isDisabled} {...register} autoComplete="off" />
+        <StyledInput
+          id={id}
+          type="text"
+          disabled={isLoading || isDisabled}
+          autoComplete="off"
+          {...register}
+          {...rest}
+        />
       </Inline>
     </Container>
   );
