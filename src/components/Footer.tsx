@@ -45,7 +45,7 @@ const Footer = () => {
   useResize(() => {
     const newBarLength = progressBarRef.current?.offsetWidth;
     if (!newBarLength) return;
-    setBarLength(Math.floor(newBarLength / CHARACTER_WIDTH));
+    setBarLength(Math.floor(newBarLength / CHARACTER_WIDTH) - 2);
   }, true);
 
   const progressArray = Array.from({ length: barLength }, () => null);

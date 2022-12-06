@@ -128,23 +128,21 @@ const Project = ({ project, userId, first, userHasVoted, canVote, winner }: Proj
   return (
     <Container ref={containerRef} winner={winner}>
       {first && !winner && (
-        <Text pre>_{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_</Text>
+        <Text pre>{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}</Text>
       )}
       {first && winner && (
         <Text pre red>
-          _
           {getBoxRow({
             first: true,
             charactersWidth: barLength,
             startSpace: false,
             placeText: { text: 'WINNER' },
           }).join('')}
-          _
         </Text>
       )}
       <Padding />
 
-      <ResponsiveContainer css={{ width: `${(barLength - 2) * CHARACTER_WIDTH}px` }} spaceBetween bigGap>
+      <ResponsiveContainer css={{ width: `${barLength * CHARACTER_WIDTH}px` }} spaceBetween bigGap>
         <ProjectInfo>
           <Text red={(canVote && userVotedThisOne) || winner}>{project.name}</Text>
 
@@ -201,8 +199,8 @@ const Project = ({ project, userId, first, userHasVoted, canVote, winner }: Proj
       {isVoteError && <Text yellow>there was an error when voting</Text>}
       {isRemoveVoteError && <Text yellow>there was an error removing the vote</Text>}
 
-      <Text pre red={winner}>
-        _{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_
+      <Text css={{ width: 'fit-content' }} pre red={winner}>
+        {getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}
       </Text>
     </Container>
   );

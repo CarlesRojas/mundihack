@@ -20,7 +20,7 @@ export enum ABLY_EVENT {
 
 export const MAX_TEAM_SIZE = 1;
 
-export const CHARACTER_WIDTH = 11;
+export const CHARACTER_WIDTH = 10.56;
 
 export enum ACTION {
   TEAM = 'team',
