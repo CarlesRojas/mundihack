@@ -3,6 +3,7 @@ import Project from '@components/Project';
 import Text from '@components/Text';
 import { styled } from '@styles/stitches.config';
 import { ACTION, AUTH_STATUS } from '@utils/constants';
+import type { RouterOutputs } from '@utils/trpc';
 import { trpc } from '@utils/trpc';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
@@ -14,6 +15,9 @@ const Container = styled('div', {
   flexDirection: 'column',
   gap: '0.5rem',
 });
+
+type ProjectToSort = RouterOutputs['public']['getProjects'][0];
+const sortByMostVotes = (a: ProjectToSort, b: ProjectToSort) => b.votes.length - a.votes.length;
 
 const Projects: NextPage = () => {
   const { status, data: session } = useSession();
@@ -35,19 +39,41 @@ const Projects: NextPage = () => {
   const userHasVoted =
     projects?.some((project) => project.votes?.find((vote) => vote.id === session?.user?.id)) ?? false;
 
+  if (canVote)
+    return container(
+      <>
+        {canVote && <Text>{'cast your vote!'}</Text>}
+
+        {sumbittedProjects &&
+          sumbittedProjects.map((project, i) => (
+            <Project
+              key={project.id}
+              project={project}
+              userId={session?.user?.id}
+              userHasVoted={userHasVoted}
+              first={i === 0}
+              canVote={canVote}
+            />
+          ))}
+      </>,
+    );
+
   return container(
     <>
-      {canVote && <Text>{'cast your vote!'}</Text>}
-
-      {sumbittedProjects?.map((project, i) => (
-        <Project
-          key={project.id}
-          project={project}
-          userId={session?.user?.id}
-          userHasVoted={userHasVoted}
-          first={i === 0}
-        />
-      ))}
+      {sumbittedProjects &&
+        sumbittedProjects
+          .sort(sortByMostVotes)
+          .map((project, i) => (
+            <Project
+              key={project.id}
+              project={project}
+              userId={session?.user?.id}
+              userHasVoted={userHasVoted}
+              first={i <= 1}
+              canVote={canVote}
+              winner={i === 0}
+            />
+          ))}
     </>,
   );
 };

@@ -29,6 +29,11 @@ const Container = styled('div', {
         cursor: 'not-allowed !important',
       },
     },
+    winner: {
+      true: {
+        marginBottom: '5rem',
+      },
+    },
   },
 });
 
@@ -91,6 +96,8 @@ interface ProjectProps {
   userId?: string;
   first?: boolean;
   userHasVoted?: boolean;
+  canVote?: boolean;
+  winner?: boolean;
 }
 
 const getSeparatorCharacter = (index: number, length: number) => {
@@ -99,7 +106,7 @@ const getSeparatorCharacter = (index: number, length: number) => {
   return ', ';
 };
 
-const Project = ({ project, userId, first, userHasVoted }: ProjectProps) => {
+const Project = ({ project, userId, first, userHasVoted, canVote, winner }: ProjectProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [barLength, setBarLength] = useState(0);
 
@@ -119,27 +126,36 @@ const Project = ({ project, userId, first, userHasVoted }: ProjectProps) => {
   });
 
   return (
-    <Container ref={containerRef}>
-      {first && <Text pre>_{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_</Text>}
+    <Container ref={containerRef} winner={winner}>
+      {first && !winner && (
+        <Text pre>_{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_</Text>
+      )}
+      {first && winner && (
+        <Text pre red>
+          _
+          {getBoxRow({
+            first: true,
+            charactersWidth: barLength,
+            startSpace: false,
+            placeText: { text: 'WINNER' },
+          }).join('')}
+          _
+        </Text>
+      )}
       <Padding />
 
       <ResponsiveContainer css={{ width: `${(barLength - 2) * CHARACTER_WIDTH}px` }} spaceBetween bigGap>
         <ProjectInfo>
-          <Text red={userVotedThisOne}>{project.name}</Text>
+          <Text red={(canVote && userVotedThisOne) || winner}>{project.name}</Text>
 
-          <Text red={userVotedThisOne} low>
-            {project.description}
-          </Text>
+          <Text low>{project.description}</Text>
 
           <CreatorsContainer>
-            <Text red={userVotedThisOne}>by</Text>
+            <Text>by</Text>
 
             {project.users.map((user, i) => (
               <Fragment key={user.id}>
-                <Text red={userVotedThisOne}>{`${parseName(user.name).fullName}${getSeparatorCharacter(
-                  i,
-                  project.users.length,
-                )}`}</Text>
+                <Text>{`${parseName(user.name).fullName}${getSeparatorCharacter(i, project.users.length)}`}</Text>
               </Fragment>
             ))}
           </CreatorsContainer>
@@ -159,7 +175,7 @@ const Project = ({ project, userId, first, userHasVoted }: ProjectProps) => {
           </ResponsiveContainer>
         </ProjectInfo>
 
-        {userId && userVotedThisOne && (
+        {canVote && userId && userVotedThisOne && (
           <Button
             icon={<RiCloseFill />}
             label={'remove vote'}
@@ -169,7 +185,7 @@ const Project = ({ project, userId, first, userHasVoted }: ProjectProps) => {
           />
         )}
 
-        {userId && !isUserProject && !userVotedThisOne && !userHasVoted && (
+        {canVote && userId && !isUserProject && !userVotedThisOne && !userHasVoted && (
           <Button
             icon={<RiCheckFill />}
             label={'vote'}
@@ -178,12 +194,16 @@ const Project = ({ project, userId, first, userHasVoted }: ProjectProps) => {
             isDisabled={isVoteError}
           />
         )}
+
+        {!canVote && <Text css={{ minWidth: 'fit-content' }}>{`${project.votes.length} votes`}</Text>}
       </ResponsiveContainer>
 
       {isVoteError && <Text yellow>there was an error when voting</Text>}
       {isRemoveVoteError && <Text yellow>there was an error removing the vote</Text>}
 
-      <Text pre>_{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_</Text>
+      <Text pre red={winner}>
+        _{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}_
+      </Text>
     </Container>
   );
 };

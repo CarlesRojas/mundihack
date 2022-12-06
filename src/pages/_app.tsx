@@ -37,7 +37,7 @@ const Container = styled('div', {
   display: 'grid',
   gridTemplateRows: 'auto minmax(0, 1fr) auto',
   gridTemplateColumns: 'minmax(0, 1fr)',
-  rowGap: '1rem',
+  rowGap: '3rem',
 });
 
 const Main = styled('main', {
@@ -60,25 +60,18 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const { getUser, getProject } = privateRouter;
   const { getProjects, getUsers, getAction } = publicRouter;
 
-  const handleUpdateTeamsEvent = useCallback(() => {
+  const invalidateQueries = useCallback(() => {
     getUsers.invalidate();
     getProjects.invalidate();
     getUser.invalidate();
-  }, [getUsers, getProjects, getUser]);
-
-  const handleUpdateActionsEvent = useCallback(() => {
     getAction.invalidate();
-  }, [getAction]);
-
-  const handleUpdateTeamProjectEvent = useCallback(() => {
     getProject.invalidate();
-    getProjects.invalidate();
-  }, [getProject, getProjects]);
+  }, [getUsers, getProjects, getUser, getAction, getProject]);
 
   useAbly({
-    [ABLY_EVENT.UPDATE_TEAMS]: handleUpdateTeamsEvent,
-    [ABLY_EVENT.UPDATE_ACTIONS]: handleUpdateActionsEvent,
-    [ABLY_EVENT.UPDATE_TEAM_PROJECT]: handleUpdateTeamProjectEvent,
+    [ABLY_EVENT.UPDATE_TEAMS]: invalidateQueries,
+    [ABLY_EVENT.UPDATE_ACTIONS]: invalidateQueries,
+    [ABLY_EVENT.UPDATE_TEAM_PROJECT]: invalidateQueries,
   });
 
   return (
