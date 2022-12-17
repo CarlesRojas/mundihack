@@ -1,5 +1,6 @@
 import useDidMount from '@hooks/useDidMount';
 import useFocus from '@hooks/useFocus';
+import { mouse } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import type { ComponentPropsWithoutRef } from 'react';
 import type { UseFormRegisterReturn } from 'react-hook-form';
@@ -11,6 +12,12 @@ const Container = styled('div', {
   flexDirection: 'column',
   justifyContent: 'center',
   gap: '0.5rem',
+
+  [mouse]: {
+    '&:hover': {
+      cursor: 'text',
+    },
+  },
 });
 
 const Inline = styled('div', {
@@ -64,15 +71,19 @@ const Input = ({ id, label, error, register, isLoading, isDisabled, focusOnMount
   return (
     <Container>
       <Inline>
-        <Text low red={isFocused} as="label" htmlFor={id}>
+        <Text low red={isFocused} as="label" htmlFor={id} inputCursor>
           {label}
         </Text>
-        <Text yellow>{error || ''}</Text>
+        <Text yellow as="label" htmlFor={id} inputCursor>
+          {error || ''}
+        </Text>
       </Inline>
 
       <Inline>
         <Tab />
-        <Text red={isFocused}>{'>'}</Text>
+        <Text red={isFocused} inputCursor>
+          {'>'}
+        </Text>
         <StyledInput
           id={id}
           type="text"

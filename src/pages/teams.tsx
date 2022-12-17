@@ -57,6 +57,20 @@ const Teams: NextPage = () => {
 
   return (
     <Container>
+      {teamAction?.allowed && usersWithoutATeam && usersWithoutATeam.length > 0 && (
+        <>
+          <Text>{'participants without a team:'}</Text>
+
+          <Wrap>
+            {usersWithoutATeam.map(({ id, name }) => (
+              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
+            ))}
+          </Wrap>
+
+          <Text>{'available teams:'}</Text>
+        </>
+      )}
+
       <Wrap bigGap>
         {projects?.map((project, i) => (
           <Team
@@ -67,14 +81,6 @@ const Teams: NextPage = () => {
             index={i + 1}
             updateTeams={updateTeams}
           ></Team>
-        ))}
-      </Wrap>
-
-      {usersWithoutATeam && usersWithoutATeam.length > 0 && <Text>{'participants without a team:'}</Text>}
-
-      <Wrap>
-        {usersWithoutATeam?.map(({ id, name }) => (
-          <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
         ))}
       </Wrap>
 

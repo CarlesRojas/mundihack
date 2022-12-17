@@ -1,5 +1,5 @@
-export const START_TIME = new Date(2022, 11, 5, 10, 0, 0, 0).getTime();
-export const END_TIME = new Date(2022, 11, 6, 16, 0, 0, 0).getTime();
+export const START_TIME = new Date(2022, 11, 16, 10, 0, 0, 0).getTime();
+export const END_TIME = new Date(2022, 11, 17, 16, 0, 0, 0).getTime();
 
 export enum ROUTE {
   CALENDAR = '/',
@@ -18,7 +18,8 @@ export enum ABLY_EVENT {
   UPDATE_TEAM_PROJECT = 'update-team-project',
 }
 
-export const MAX_TEAM_SIZE = 1;
+export const MIN_TEAM_SIZE = 2;
+export const MAX_TEAM_SIZE = 3;
 
 export const CHARACTER_WIDTH = 10.56;
 

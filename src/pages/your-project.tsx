@@ -26,7 +26,6 @@ const Form = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
-  pointerEvents: 'none',
 });
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

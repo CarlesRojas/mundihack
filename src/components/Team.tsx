@@ -58,7 +58,7 @@ const Team = ({ team, index, updateTeams, active, user }: TeamProps) => {
     else if (team.users.length < MAX_TEAM_SIZE) joinProject({ projectId: team.id });
   };
 
-  const teamText = { text: getTeamText(index, isUserTeam, isTeamFull, isHovered) };
+  const teamText = { text: team.name ?? getTeamText(index, isUserTeam, isTeamFull, isHovered) };
   const usersText = team.users.map(({ name }) => ({ text: `[ ${parseName(name).fullName} ]` }));
 
   return (

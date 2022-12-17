@@ -47,6 +47,13 @@ const Text = styled('p', {
         opacity: 0.5,
       },
     },
+    inputCursor: {
+      true: {
+        [mouse]: {
+          cursor: 'text',
+        },
+      },
+    },
   },
 });
 
