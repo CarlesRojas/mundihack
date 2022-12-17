@@ -13,7 +13,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import Head from 'next/head';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 configureAbly({ authUrl: `${env.NEXT_PUBLIC_HOSTNAME}/api/ably/createToken` });
 
@@ -56,6 +56,13 @@ const Main = styled('main', {
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   globalStyles();
+
+  useEffect(() => {
+    console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator)
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.mjs'));
+  });
+
   const { private: privateRouter, public: publicRouter } = trpc.useContext();
   const { getUser, getProject } = privateRouter;
   const { getProjects, getUsers, getAction } = publicRouter;
