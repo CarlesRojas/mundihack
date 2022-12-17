@@ -58,7 +58,6 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   globalStyles();
 
   useEffect(() => {
-    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator)
       window.addEventListener('load', () => navigator.serviceWorker.register('/sw.mjs'));
   });
