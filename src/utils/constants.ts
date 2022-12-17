@@ -24,13 +24,11 @@ export const CHARACTER_WIDTH = 10.56;
 
 export enum ACTION {
   TEAM = 'team',
-  VOTE = 'vote',
   PROJECT = 'project',
 }
 
 export const defaultActions: { [key in ACTION]: boolean } = {
   [ACTION.TEAM]: false,
-  [ACTION.VOTE]: false,
   [ACTION.PROJECT]: false,
 };
 

@@ -24,7 +24,7 @@ model Project {
   githubLink  String?
   projectLink String?
   users       User[]  @relation(name: "project")
-  votes       User[]  @relation(name: "vote")
+  winner      Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,18 +32,16 @@ model Project {
 
 // Necessary for Next auth
 model User {
-  id             String    @id @default(cuid())
-  isAdmin        Boolean   @default(false)
-  name           String?
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  project        Project?  @relation("project", fields: [projectId], references: [id], onDelete: Cascade)
-  projectId      String?
-  vote           Project?  @relation("vote", fields: [votedProjectId], references: [id], onDelete: Cascade)
-  votedProjectId String?
+  id            String    @id @default(cuid())
+  isAdmin       Boolean   @default(false)
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  project       Project?  @relation("project", fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

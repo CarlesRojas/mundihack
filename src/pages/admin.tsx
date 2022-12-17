@@ -8,7 +8,7 @@ import { ACTION, ROUTE } from '@utils/constants';
 import { trpc } from '@utils/trpc';
 import type { GetServerSideProps } from 'next';
 import { type NextPage } from 'next';
-import { RiMailFill, RiSendPlane2Fill, RiTeamFill } from 'react-icons/ri';
+import { RiSendPlane2Fill, RiTeamFill } from 'react-icons/ri';
 
 const Container = styled('div', {
   display: 'flex',
@@ -27,15 +27,13 @@ const Admin: NextPage = () => {
   const utils = trpc.useContext();
 
   const { data: teamAction, isError: isTeamActionError } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
-  const { data: voteAction, isError: isVoteActionError } = trpc.public.getAction.useQuery({ name: ACTION.VOTE });
   const { data: projectAction, isError: isProjectActionError } = trpc.public.getAction.useQuery({
     name: ACTION.PROJECT,
   });
 
-  const isError = isTeamActionError || isVoteActionError || isProjectActionError;
+  const isError = isTeamActionError || isProjectActionError;
 
   const teamActionAllowed = teamAction?.allowed ?? false;
-  const voteActionAllowed = voteAction?.allowed ?? false;
   const projectActionAllowed = projectAction?.allowed ?? false;
 
   const { updateActions } = useAbly();
@@ -53,12 +51,6 @@ const Admin: NextPage = () => {
         const prevActionData = utils.public.getAction.getData({ name: ACTION.TEAM });
         if (prevActionData)
           utils.public.getAction.setData({ name: ACTION.TEAM }, () => ({ ...prevActionData, allowed }));
-      }
-
-      if (action === ACTION.VOTE) {
-        const prevActionData = utils.public.getAction.getData({ name: ACTION.VOTE });
-        if (prevActionData)
-          utils.public.getAction.setData({ name: ACTION.VOTE }, () => ({ ...prevActionData, allowed }));
       }
 
       if (action === ACTION.PROJECT) {
@@ -87,13 +79,6 @@ const Admin: NextPage = () => {
         isDisabled={isUpdateActionLoading}
         label={projectActionAllowed ? 'Stop project submitions' : 'Start project submitions'}
         onClick={() => handleSetAction(ACTION.PROJECT, !projectActionAllowed)}
-      />
-
-      <Button
-        icon={<RiMailFill />}
-        isDisabled={isUpdateActionLoading}
-        label={voteActionAllowed ? 'Stop vote' : 'Start vote'}
-        onClick={() => handleSetAction(ACTION.VOTE, !voteActionAllowed)}
       />
 
       {isUpdateActionLoading && <Loading />}

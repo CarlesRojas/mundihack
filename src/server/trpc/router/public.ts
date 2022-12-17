@@ -9,7 +9,7 @@ export const publicRouter = router({
 
   getUsers: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany({
-      select: { id: true, email: true, name: true, projectId: true, votedProjectId: true },
+      select: { id: true, email: true, name: true, projectId: true },
       orderBy: { name: 'asc' },
     });
   }),
@@ -49,8 +49,8 @@ export const publicRouter = router({
         description: true,
         githubLink: true,
         projectLink: true,
+        winner: true,
         users: { select: { id: true, name: true } },
-        votes: { select: { id: true, name: true } },
       },
       orderBy: { createdAt: 'asc' },
     });

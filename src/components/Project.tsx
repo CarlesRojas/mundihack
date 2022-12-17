@@ -1,5 +1,4 @@
 import useResize from '@hooks/useResize';
-import { useRemoveVote, useVote } from '@server/hooks/useVote';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { CHARACTER_WIDTH } from '@utils/constants';
@@ -7,8 +6,6 @@ import getBoxRow from '@utils/getBoxRow';
 import parseName from '@utils/parseName';
 import type { RouterOutputs } from '@utils/trpc';
 import { Fragment, useRef, useState } from 'react';
-import { RiCheckFill, RiCloseFill } from 'react-icons/ri';
-import Button from './Button';
 import Text from './Text';
 
 const Container = styled('div', {
@@ -95,9 +92,6 @@ interface ProjectProps {
   project: RouterOutputs['public']['getProjects'][0];
   userId?: string;
   first?: boolean;
-  userHasVoted?: boolean;
-  canVote?: boolean;
-  winner?: boolean;
 }
 
 const getSeparatorCharacter = (index: number, length: number) => {
@@ -106,7 +100,7 @@ const getSeparatorCharacter = (index: number, length: number) => {
   return ', ';
 };
 
-const Project = ({ project, userId, first, userHasVoted, canVote, winner }: ProjectProps) => {
+const Project = ({ project, userId, first }: ProjectProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [barLength, setBarLength] = useState(0);
 
@@ -117,20 +111,13 @@ const Project = ({ project, userId, first, userHasVoted, canVote, winner }: Proj
   }, true);
 
   const isUserProject = project.users.some((user) => user.id === userId);
-  const userVotedThisOne = project.votes.some((vote) => vote.id === userId);
-
-  const { voteMutation, isVoteError, isVoteLoading } = useVote({ projectId: project.id, userId });
-  const { removeVoteMutation, isRemoveVoteError, isRemoveVoteLoading } = useRemoveVote({
-    projectId: project.id,
-    userId,
-  });
 
   return (
-    <Container ref={containerRef} winner={winner}>
-      {first && !winner && (
+    <Container ref={containerRef} winner={project.winner}>
+      {first && !project.winner && (
         <Text pre>{getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}</Text>
       )}
-      {first && winner && (
+      {first && project.winner && (
         <Text pre red>
           {getBoxRow({
             first: true,
@@ -144,7 +131,7 @@ const Project = ({ project, userId, first, userHasVoted, canVote, winner }: Proj
 
       <ResponsiveContainer css={{ width: `${barLength * CHARACTER_WIDTH}px` }} spaceBetween bigGap>
         <ProjectInfo>
-          <Text red={(canVote && userVotedThisOne) || winner}>{project.name}</Text>
+          <Text red={project.winner}>{project.name}</Text>
 
           <Text low>{project.description}</Text>
 
@@ -172,34 +159,9 @@ const Project = ({ project, userId, first, userHasVoted, canVote, winner }: Proj
             )}
           </ResponsiveContainer>
         </ProjectInfo>
-
-        {canVote && userId && userVotedThisOne && (
-          <Button
-            icon={<RiCloseFill />}
-            label={'remove vote'}
-            onClick={() => removeVoteMutation()}
-            isLoading={isRemoveVoteLoading}
-            isDisabled={isRemoveVoteError}
-          />
-        )}
-
-        {canVote && userId && !isUserProject && !userVotedThisOne && !userHasVoted && (
-          <Button
-            icon={<RiCheckFill />}
-            label={'vote'}
-            onClick={() => voteMutation()}
-            isLoading={isVoteLoading}
-            isDisabled={isVoteError}
-          />
-        )}
-
-        {!canVote && <Text css={{ minWidth: 'fit-content' }}>{`${project.votes.length} votes`}</Text>}
       </ResponsiveContainer>
 
-      {isVoteError && <Text yellow>there was an error when voting</Text>}
-      {isRemoveVoteError && <Text yellow>there was an error removing the vote</Text>}
-
-      <Text css={{ width: 'fit-content' }} pre red={winner}>
+      <Text css={{ width: 'fit-content' }} pre red={project.winner}>
         {getBoxRow({ first: true, charactersWidth: barLength, startSpace: false }).join('')}
       </Text>
     </Container>
