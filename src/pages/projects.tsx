@@ -2,7 +2,7 @@ import Loading from '@components/Loading';
 import Project from '@components/Project';
 import Text from '@components/Text';
 import { styled } from '@styles/stitches.config';
-import { AUTH_STATUS } from '@utils/constants';
+import { AUTH_STATUS, SHORT_MONTHS, START_TIME } from '@utils/constants';
 import type { RouterOutputs } from '@utils/trpc';
 import { trpc } from '@utils/trpc';
 import type { NextPage } from 'next';
@@ -29,8 +29,23 @@ const Projects: NextPage = () => {
 
   if (isGetProjectsError) return container(<Text yellow>{'there was an error getting the projects'}</Text>);
 
-  if (sumbittedProjects && sumbittedProjects.length <= 0)
-    return container(<Text>{'no projects have been submitted yet'}</Text>);
+  if (sumbittedProjects && sumbittedProjects.length <= 0) {
+    const hasStarted = new Date().getTime() - START_TIME > 0;
+    const startTime = new Date(START_TIME);
+
+    return container(
+      <>
+        <Text>{'no projects have been submitted yet'}</Text>
+        {!hasStarted && (
+          <Text>{`<mundi>hack starts on ${startTime.getDate()} ${
+            SHORT_MONTHS[startTime.getMonth()]
+          } ${startTime.getFullYear()} at ${startTime.getHours()}:${
+            startTime.getMinutes() < 10 ? `0${startTime.getMinutes()}` : startTime.getMinutes()
+          }`}</Text>
+        )}
+      </>,
+    );
+  }
 
   if (status === AUTH_STATUS.LOADING) return container(<Loading showLabel />);
 

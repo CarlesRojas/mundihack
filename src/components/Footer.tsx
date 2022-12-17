@@ -4,7 +4,7 @@ import useResize from '@hooks/useResize';
 import { keyframes } from '@stitches/react';
 import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
-import { CHARACTER_WIDTH, END_TIME, START_TIME } from '@utils/constants';
+import { CHARACTER_WIDTH, END_TIME, SHORT_MONTHS, START_TIME } from '@utils/constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const Container = styled('footer', {
@@ -94,8 +94,6 @@ const Gas = styled('div', {
   },
 });
 
-const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
 const Footer = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [progress, setProgress] = useState(100);
@@ -173,7 +171,7 @@ const Footer = () => {
         {hasStarted
           ? `time left: ${hours}h ${twoDigitMinutes}m ${twoDigitSeconds}s`
           : `start time: ${startTime.getDate()} ${
-              shortMonths[startTime.getMonth()]
+              SHORT_MONTHS[startTime.getMonth()]
             } ${startTime.getFullYear()} at ${startTime.getHours()}:${
               startTime.getMinutes() < 10 ? `0${startTime.getMinutes()}` : startTime.getMinutes()
             }`}
