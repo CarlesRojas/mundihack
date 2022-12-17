@@ -36,7 +36,7 @@ const Teams: NextPage = () => {
 
   const { data: teamAction, isError: isTeamActionError } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
   const { data: users, isError: isUsersError } = trpc.public.getUsers.useQuery();
-  const { data: projects, isError: isProjectsError } = trpc.public.getProjects.useQuery();
+  const { data: projects, isLoading: isProjectsLoading, isError: isProjectsError } = trpc.public.getProjects.useQuery();
   const {
     data: user,
     isError: isUserError,
@@ -48,7 +48,7 @@ const Teams: NextPage = () => {
   const { updateTeams } = useAbly();
   const usersWithoutATeam = users?.filter(({ projectId }) => !projectId);
 
-  if (status !== AUTH_STATUS.UNAUTHENTICATED && isGetUserLoading)
+  if ((status !== AUTH_STATUS.UNAUTHENTICATED && isGetUserLoading) || isProjectsLoading)
     return (
       <Container>
         <Loading showLabel />
