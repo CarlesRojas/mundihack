@@ -51,10 +51,10 @@ const Moto = styled('div', {
   animationFillMode: 'forwards',
   transformOrigin: '42% 80%',
 
-  translate: 'calc(100% + 1rem) 0',
-  [tablet]: { translate: 'calc(100% + 4rem) 0' },
-  [laptop]: { translate: 'calc(100% + 10rem) 0' },
-  [desktop]: { translate: 'calc(100% + 16rem) 0' },
+  translate: 'calc(100% + 3rem) 0',
+  [tablet]: { translate: 'calc(100% + 6rem) 0' },
+  [laptop]: { translate: 'calc(100% + 12rem) 0' },
+  [desktop]: { translate: 'calc(100% + 18rem) 0' },
 
   variants: {
     animated: {
@@ -80,10 +80,10 @@ const Gas = styled('div', {
   flexDirection: 'column',
   animationFillMode: 'forwards',
 
-  translate: 'calc(100% + 1rem) 0',
-  [tablet]: { translate: 'calc(100% + 4rem) 0' },
-  [laptop]: { translate: 'calc(100% + 10rem) 0' },
-  [desktop]: { translate: 'calc(100% + 16rem) 0' },
+  translate: 'calc(100% + 3rem) 0',
+  [tablet]: { translate: 'calc(100% + 6rem) 0' },
+  [laptop]: { translate: 'calc(100% + 12rem) 0' },
+  [desktop]: { translate: 'calc(100% + 18rem) 0' },
 
   variants: {
     animated: {
