@@ -4,7 +4,7 @@ import Team from '@components/Team';
 import Text from '@components/Text';
 import useAbly from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
-import { ACTION, AUTH_STATUS } from '@utils/constants';
+import { ACTION, AUTH_STATUS, START_TIME } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { trpc } from '@utils/trpc';
 import type { NextPage } from 'next';
@@ -55,22 +55,10 @@ const Teams: NextPage = () => {
       </Container>
     );
 
+  const hasStarted = new Date().getTime() - START_TIME > 0;
+
   return (
     <Container>
-      {teamAction?.allowed && usersWithoutATeam && usersWithoutATeam.length > 0 && (
-        <>
-          <Text>{'participants without a team:'}</Text>
-
-          <Wrap>
-            {usersWithoutATeam.map(({ id, name }) => (
-              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
-            ))}
-          </Wrap>
-
-          <Text>{'available teams:'}</Text>
-        </>
-      )}
-
       <Wrap bigGap>
         {projects?.map((project, i) => (
           <Team
@@ -83,6 +71,18 @@ const Teams: NextPage = () => {
           ></Team>
         ))}
       </Wrap>
+
+      {(teamAction?.allowed || !hasStarted) && usersWithoutATeam && usersWithoutATeam.length > 0 && (
+        <>
+          <Text>{teamAction?.allowed ? 'participants without a team:' : 'participants:'}</Text>
+
+          <Wrap>
+            {usersWithoutATeam.map(({ id, name }) => (
+              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
+            ))}
+          </Wrap>
+        </>
+      )}
 
       {isError && <Text yellow>there was an error getting the teams</Text>}
     </Container>
