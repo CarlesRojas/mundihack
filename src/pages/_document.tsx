@@ -14,7 +14,14 @@ export default function Document() {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
 
+        <link rel="apple-touch-icon" href="/appleIcon120.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/appleIcon180.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/appleIcon152.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/appleIcon167.png" />
+
+        <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="crossorigin" />
