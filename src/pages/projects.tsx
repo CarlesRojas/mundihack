@@ -34,12 +34,14 @@ const Projects: NextPage = () => {
 
   if (status === AUTH_STATUS.LOADING) return container(<Loading showLabel />);
 
+  const hasWinner = sumbittedProjects?.some((project) => project.winner);
+
   return container(
     <>
       {sumbittedProjects &&
         sumbittedProjects
           .sort(sortWinner)
-          .map((project, i) => <Project key={project.id} project={project} first={i <= 1} />)}
+          .map((project, i) => <Project key={project.id} project={project} first={hasWinner ? i <= 1 : i <= 0} />)}
     </>,
   );
 };
