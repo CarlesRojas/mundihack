@@ -1,5 +1,5 @@
-export const START_TIME = new Date(2022, 11, 18, 10, 0, 0, 0).getTime();
-export const END_TIME = new Date(2022, 11, 18, 16, 0, 0, 0).getTime();
+export const START_TIME = new Date(2023, 0, 26, 10, 0, 0, 0).getTime();
+export const END_TIME = new Date(2023, 0, 27, 16, 0, 0, 0).getTime();
 
 export enum ROUTE {
   CALENDAR = '/',

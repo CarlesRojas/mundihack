@@ -94,6 +94,8 @@ const Gas = styled('div', {
   },
 });
 
+const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 const Footer = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [progress, setProgress] = useState(100);
@@ -162,9 +164,20 @@ const Footer = () => {
     '                GAS    GAAS',
   ];
 
+  const hasStarted = new Date().getTime() - START_TIME > 0;
+  const startTime = new Date(START_TIME);
+
   return (
     <Container>
-      <Text>{`time left: ${hours}h ${twoDigitMinutes}m ${twoDigitSeconds}s`}</Text>
+      <Text>
+        {hasStarted
+          ? `time left: ${hours}h ${twoDigitMinutes}m ${twoDigitSeconds}s`
+          : `start time: ${startTime.getDate()} ${
+              shortMonths[startTime.getMonth()]
+            } ${startTime.getFullYear()} at ${startTime.getHours()}:${
+              startTime.getMinutes() < 10 ? `0${startTime.getMinutes()}` : startTime.getMinutes()
+            }`}
+      </Text>
 
       <ProgressBar ref={progressBarRef}>
         <Text as="span">[</Text>
