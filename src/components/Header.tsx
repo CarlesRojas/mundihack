@@ -1,12 +1,14 @@
 import BracketText from '@components/BracketText';
 import Button from '@components/Button';
 import NextLink from '@components/NextLink';
+import useAutoResetState from '@hooks/useAutoResetState';
 import useSessionUser from '@server/hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { ROUTE } from '@utils/constants';
 import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
 import Text from './Text';
 
@@ -43,6 +45,11 @@ const LogoText = styled('p', {
         color: '$red',
       },
     },
+    clickable: {
+      true: {
+        cursor: 'pointer',
+      },
+    },
   },
 });
 
@@ -63,12 +70,24 @@ const Header = () => {
   const user = useSessionUser();
   const router = useRouter();
 
+  const [showEasterEgg, setShowEasterEgg] = useAutoResetState(false, 5000);
+  const [clicks, setClicks] = useAutoResetState(0, 500);
+  const handleLogoClick = () => {
+    setClicks((prev: number) => prev + 1);
+  };
+
+  useEffect(() => {
+    if (clicks >= 5) setShowEasterEgg(true);
+  }, [clicks, setShowEasterEgg]);
+
   return (
     <Container>
       <Main>
         <Logo>
           <LogoText red>{'<mundi>'}</LogoText>
-          <LogoText>{'hack'}</LogoText>
+          <LogoText clickable onClick={handleLogoClick}>
+            {showEasterEgg ? 'paco' : 'hack'}
+          </LogoText>
         </Logo>
 
         <Links>
