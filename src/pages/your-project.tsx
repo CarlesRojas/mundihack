@@ -27,14 +27,6 @@ const Form = styled('form', {
   flexDirection: 'column',
   gap: '1rem',
   pointerEvents: 'none',
-
-  variants: {
-    active: {
-      true: {
-        pointerEvents: 'all',
-      },
-    },
-  },
 });
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -113,19 +105,17 @@ const YourProject: NextPage = () => {
   if (isLoading) return container(<Loading showLabel />);
   if (isError) return container(<Text yellow>{'there was an error getting the project information'}</Text>);
 
+  if (!canSumbit) return container(<Text>{'submissions are closed'}</Text>);
+
   return container(
     <>
-      {canSumbit && (
-        <Text>
-          {project?.name
-            ? 'all set! you can update this at any point before the time runs out'
-            : 'remember to fill your project information before the time runs out'}
-        </Text>
-      )}
+      <Text>
+        {project?.name
+          ? 'all set! you can update this at any point before the time runs out'
+          : 'remember to fill your project information before the time runs out'}
+      </Text>
 
-      {!canSumbit && <Text>{'submissions are closed'}</Text>}
-
-      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off" active={canSumbit}>
+      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Input
           id={'name'}
           label={'project name:'}
@@ -133,7 +123,6 @@ const YourProject: NextPage = () => {
           register={register('name', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('name')}
           isLoading={isUpdateProjectLoading}
-          isDisabled={!canSumbit}
           maxLength={20}
         />
 
@@ -143,7 +132,6 @@ const YourProject: NextPage = () => {
           register={register('description', { required: { value: true, message: 'this field is required' } })}
           error={getFormErrorMessage('description')}
           isLoading={isUpdateProjectLoading}
-          isDisabled={!canSumbit}
           maxLength={200}
         />
 
@@ -156,7 +144,6 @@ const YourProject: NextPage = () => {
           })}
           error={getFormErrorMessage('githubLink')}
           isLoading={isUpdateProjectLoading}
-          isDisabled={!canSumbit}
         />
 
         <Input
@@ -165,19 +152,16 @@ const YourProject: NextPage = () => {
           register={register('projectLink', { validate: validateLink })}
           error={getFormErrorMessage('projectLink')}
           isLoading={isUpdateProjectLoading}
-          isDisabled={!canSumbit}
         />
 
         <div />
 
-        {canSumbit && (
-          <Button
-            label={project?.name ? 'update' : 'save'}
-            isLoading={isUpdateProjectLoading}
-            isDisabled={!isDirty || !isValid}
-            icon={<RiSave2Fill />}
-          />
-        )}
+        <Button
+          label={project?.name ? 'update' : 'save'}
+          isLoading={isUpdateProjectLoading}
+          isDisabled={!isDirty || !isValid}
+          icon={<RiSave2Fill />}
+        />
 
         {isUpdateProjectError && <Text yellow>{'there was an error updating the project information'}</Text>}
       </Form>

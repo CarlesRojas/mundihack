@@ -90,7 +90,6 @@ const CreatorsContainer = styled('div', {
 
 interface ProjectProps {
   project: RouterOutputs['public']['getProjects'][0];
-  userId?: string;
   first?: boolean;
 }
 
@@ -100,7 +99,7 @@ const getSeparatorCharacter = (index: number, length: number) => {
   return ', ';
 };
 
-const Project = ({ project, userId, first }: ProjectProps) => {
+const Project = ({ project, first }: ProjectProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [barLength, setBarLength] = useState(0);
 
@@ -109,8 +108,6 @@ const Project = ({ project, userId, first }: ProjectProps) => {
     if (!newBarLength) return;
     setBarLength(Math.floor(newBarLength / CHARACTER_WIDTH));
   }, true);
-
-  const isUserProject = project.users.some((user) => user.id === userId);
 
   return (
     <Container ref={containerRef} winner={project.winner}>

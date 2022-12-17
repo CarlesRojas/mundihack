@@ -20,7 +20,7 @@ type ProjectToSort = RouterOutputs['public']['getProjects'][0];
 const sortWinner = (a: ProjectToSort) => (a.winner ? -1 : 1);
 
 const Projects: NextPage = () => {
-  const { status, data: session } = useSession();
+  const { status } = useSession();
   const { data: projects, isError: isGetProjectsError } = trpc.public.getProjects.useQuery();
 
   const sumbittedProjects = projects?.filter((project) => !!project.name);
@@ -39,9 +39,7 @@ const Projects: NextPage = () => {
       {sumbittedProjects &&
         sumbittedProjects
           .sort(sortWinner)
-          .map((project, i) => (
-            <Project key={project.id} project={project} userId={session?.user?.id} first={i <= 1} />
-          ))}
+          .map((project, i) => <Project key={project.id} project={project} first={i <= 1} />)}
     </>,
   );
 };
