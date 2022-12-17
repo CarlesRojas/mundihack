@@ -27,8 +27,8 @@ const App = styled('div', {
   touchAction: 'none',
 
   [tablet]: { padding: '3rem 4rem' },
-  [laptop]: { padding: '6rem 10em', flexDirection: 'column' },
-  [desktop]: { padding: '8rem 16em' },
+  [laptop]: { padding: '6rem 10rem', flexDirection: 'column' },
+  [desktop]: { padding: '8rem 16rem' },
 });
 
 const Container = styled('div', {

@@ -1,10 +1,14 @@
 import Text from '@components/Text';
+import useAutoResetState from '@hooks/useAutoResetState';
 import useResize from '@hooks/useResize';
+import { keyframes } from '@stitches/react';
+import { desktop, laptop, tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
 import { CHARACTER_WIDTH, END_TIME, START_TIME } from '@utils/constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const Container = styled('footer', {
+  position: 'relative',
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -15,6 +19,79 @@ const Container = styled('footer', {
 const ProgressBar = styled('div', {
   width: '100%',
   display: 'flex',
+});
+
+const Road = styled('div', {
+  position: 'absolute',
+  bottom: 'calc(100% + 1rem)',
+  left: '0',
+  right: '0',
+  height: '100vh',
+  pointerEvents: 'none',
+});
+
+const motoAnimation = keyframes({
+  '100%': { translate: '-100vw 0' },
+});
+
+const willyMotoAnimation = keyframes({
+  '30%': { rotate: '0deg' },
+  '35%': { rotate: '45deg' },
+  '100%': { translate: '-100vw 0', rotate: '45deg' },
+});
+
+const Moto = styled('div', {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  display: 'flex',
+  height: 'fit-content',
+  width: 'fit-content',
+  flexDirection: 'column',
+  animationFillMode: 'forwards',
+  transformOrigin: '42% 80%',
+
+  translate: 'calc(100% + 1rem) 0',
+  [tablet]: { translate: 'calc(100% + 4rem) 0' },
+  [laptop]: { translate: 'calc(100% + 10rem) 0' },
+  [desktop]: { translate: 'calc(100% + 16rem) 0' },
+
+  variants: {
+    animated: {
+      true: {
+        animation: `${motoAnimation} 3s linear`,
+      },
+    },
+    animatedWilly: {
+      true: {
+        animation: `${willyMotoAnimation} 3s linear`,
+      },
+    },
+  },
+});
+
+const Gas = styled('div', {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  display: 'flex',
+  height: 'fit-content',
+  width: 'fit-content',
+  flexDirection: 'column',
+  animationFillMode: 'forwards',
+
+  translate: 'calc(100% + 1rem) 0',
+  [tablet]: { translate: 'calc(100% + 4rem) 0' },
+  [laptop]: { translate: 'calc(100% + 10rem) 0' },
+  [desktop]: { translate: 'calc(100% + 16rem) 0' },
+
+  variants: {
+    animated: {
+      true: {
+        animation: `${motoAnimation} 3s linear`,
+      },
+    },
+  },
 });
 
 const Footer = () => {
@@ -50,6 +127,41 @@ const Footer = () => {
 
   const progressArray = Array.from({ length: barLength }, () => null);
 
+  const [gas, setGas] = useAutoResetState(false, 4000);
+  const [willy, setWilly] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const turnOnGas = () => {
+      setGas(true);
+      setWilly(Math.random() > 0.6);
+      timeout = setTimeout(turnOnGas, Math.random() * 6000 + 4000);
+    };
+
+    timeout = setTimeout(turnOnGas, Math.random() * 60000 + 4000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [setGas]);
+
+  const moto = [
+    '     _                       ',
+    '  |>/--.    __               ',
+    ' __/`---\\--__/              ',
+    '/  \\ #0_\\\\/  "            ',
+    "\\__/  '   \\__/             ",
+  ];
+
+  const gasTrail = [
+    '                             ',
+    '                             ',
+    '                            ',
+    '                   GAS    ',
+    '                GAS    GAAS',
+  ];
+
   return (
     <Container>
       <Text>{`time left: ${hours}h ${twoDigitMinutes}m ${twoDigitSeconds}s`}</Text>
@@ -65,6 +177,24 @@ const Footer = () => {
 
         <Text as="span">]</Text>
       </ProgressBar>
+
+      <Road>
+        <Moto animated={gas && !willy} animatedWilly={gas && willy}>
+          {moto.map((line, index) => (
+            <Text key={index} pre>
+              {line}
+            </Text>
+          ))}
+        </Moto>
+
+        <Gas animated={gas}>
+          {gasTrail.map((line, index) => (
+            <Text key={index} pre>
+              {line}
+            </Text>
+          ))}
+        </Gas>
+      </Road>
     </Container>
   );
 };
