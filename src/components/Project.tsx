@@ -28,7 +28,7 @@ const Container = styled('div', {
     },
     winner: {
       true: {
-        marginBottom: '5rem',
+        marginBottom: '3rem',
       },
     },
   },

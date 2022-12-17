@@ -20,6 +20,7 @@ interface BracketTextProps {
   selected?: boolean;
   disabled?: boolean;
   hover?: boolean;
+  as?: string;
 }
 
 const BracketText = ({ text, red, selected, disabled, hover }: BracketTextProps) => {

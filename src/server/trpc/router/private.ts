@@ -74,4 +74,14 @@ export const privateRouter = router({
         },
       });
     }),
+
+  toggleWinner: protectedProcedure.input(z.object({ projectId: z.string() })).mutation(async ({ ctx, input }) => {
+    if (ctx.session.user.isAdmin) {
+      const currentValue = (await ctx.prisma.project.findUnique({ where: { id: input.projectId } }))?.winner;
+      if (typeof currentValue !== 'boolean') return;
+
+      if (!currentValue) await ctx.prisma.project.updateMany({ where: {}, data: { winner: false } });
+      await ctx.prisma.project.update({ where: { id: input.projectId }, data: { winner: !currentValue } });
+    }
+  }),
 });
