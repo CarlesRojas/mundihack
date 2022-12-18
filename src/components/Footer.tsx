@@ -136,10 +136,10 @@ const Footer = () => {
     const turnOnGas = () => {
       setGas(true);
       setWilly(Math.random() > 0.6);
-      timeout = setTimeout(turnOnGas, Math.random() * 60000 + 4000);
+      timeout = setTimeout(turnOnGas, Math.random() * 120000 + 10000);
     };
 
-    timeout = setTimeout(turnOnGas, Math.random() * 60000 + 4000);
+    timeout = setTimeout(turnOnGas, Math.random() * 120000 + 10000);
 
     return () => {
       clearTimeout(timeout);

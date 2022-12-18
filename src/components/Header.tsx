@@ -2,14 +2,15 @@ import BracketText from '@components/BracketText';
 import Button from '@components/Button';
 import NextLink from '@components/NextLink';
 import useAutoResetState from '@hooks/useAutoResetState';
-import useSessionUser from '@server/hooks/useSessionUser';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
-import { ROUTE } from '@utils/constants';
-import { signIn, signOut } from 'next-auth/react';
+import { AUTH_STATUS, ROUTE } from '@utils/constants';
+import parseName from '@utils/parseName';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
+import Loading from './Loading';
 import Text from './Text';
 
 const Container = styled('header', {
@@ -67,7 +68,7 @@ const User = styled('div', {
 });
 
 const Header = () => {
-  const user = useSessionUser();
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
 
   const [showEasterEgg, setShowEasterEgg] = useAutoResetState(false, 5000);
@@ -79,6 +80,8 @@ const Header = () => {
   useEffect(() => {
     if (clicks >= 5) setShowEasterEgg(true);
   }, [clicks, setShowEasterEgg]);
+
+  const parsedName = parseName(sessionData?.user?.name);
 
   return (
     <Container>
@@ -118,7 +121,7 @@ const Header = () => {
             />
           </NextLink>
 
-          {user && (
+          {status === AUTH_STATUS.AUTHENTICATED && (
             <NextLink href={ROUTE.YOUR_PROJECT}>
               <BracketText
                 text="your project"
@@ -129,7 +132,7 @@ const Header = () => {
             </NextLink>
           )}
 
-          {user && user.isAdmin && (
+          {status === AUTH_STATUS.AUTHENTICATED && sessionData?.user?.isAdmin && (
             <NextLink href={ROUTE.ADMIN}>
               <BracketText
                 text="admin"
@@ -142,11 +145,16 @@ const Header = () => {
         </Links>
       </Main>
 
-      {!user && <Button icon={<RiGoogleFill />} label={'log in with google'} onClick={() => signIn('google')} />}
-      {user && (
+      {status === AUTH_STATUS.LOADING && <Loading />}
+
+      {status === AUTH_STATUS.UNAUTHENTICATED && (
+        <Button icon={<RiGoogleFill />} label={'log in with google'} onClick={() => signIn('google')} />
+      )}
+
+      {status === AUTH_STATUS.AUTHENTICATED && (
         <User>
           <Button icon={<RiGoogleFill />} label={'log out'} onClick={() => signOut()} />
-          <Text>{user.fullName ?? ''}</Text>
+          <Text>{parsedName.fullName ?? ''}</Text>
         </User>
       )}
     </Container>
