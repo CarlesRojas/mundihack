@@ -26,7 +26,7 @@ const Calendar: NextPage = () => {
 
       <Text>{'___day 2_____________________'}</Text>
       <Text css={{ marginLeft: '2rem' }}>{'16h demos'}</Text>
-      <Text css={{ marginLeft: '2rem' }}>{'18h voting and winners'}</Text>
+      <Text css={{ marginLeft: '2rem' }}>{'18h judging and winners'}</Text>
     </Container>
   );
 };
