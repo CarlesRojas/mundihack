@@ -1,5 +1,6 @@
 import Text from '@components/Text';
 import { styled } from '@styles/stitches.config';
+import type { ComponentPropsWithoutRef } from 'react';
 
 const Container = styled('div', {
   display: 'flex',
@@ -11,10 +12,15 @@ const Container = styled('div', {
         pointerEvents: 'none',
       },
     },
+    hover: {
+      true: {
+        cursor: 'pointer',
+      },
+    },
   },
 });
 
-interface BracketTextProps {
+interface BracketTextProps extends ComponentPropsWithoutRef<'div'> {
   text: string;
   red?: boolean;
   selected?: boolean;
@@ -23,9 +29,9 @@ interface BracketTextProps {
   as?: string;
 }
 
-const BracketText = ({ text, red, selected, disabled, hover }: BracketTextProps) => {
+const BracketText = ({ text, red, selected, disabled, hover, ...rest }: BracketTextProps) => {
   return (
-    <Container disabled={disabled}>
+    <Container disabled={disabled} {...rest} hover>
       <Text red={red}>{'['}</Text>
 
       <Text red={red} underlined={selected} disabled={disabled} hover={hover}>

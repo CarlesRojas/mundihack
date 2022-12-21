@@ -1,6 +1,5 @@
 import BracketText from '@components/BracketText';
 import Button from '@components/Button';
-import NextLink from '@components/NextLink';
 import useAutoResetState from '@hooks/useAutoResetState';
 import { tablet } from '@styles/media';
 import { styled } from '@styles/stitches.config';
@@ -8,7 +7,7 @@ import { AUTH_STATUS, ROUTE } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RiGoogleFill } from 'react-icons/ri';
 import Loading from './Loading';
 import Text from './Text';
@@ -83,6 +82,15 @@ const Header = () => {
 
   const parsedName = parseName(sessionData?.user?.name);
 
+  const [clickedLink, setClickedLink] = useState<ROUTE | null>(null);
+
+  const handleLinkClick = (link: ROUTE) => {
+    setClickedLink(link);
+    router.push(link);
+  };
+
+  const currentActive = clickedLink ? clickedLink : router.pathname;
+
   return (
     <Container>
       <Main>
@@ -94,53 +102,48 @@ const Header = () => {
         </Logo>
 
         <Links>
-          <NextLink href={ROUTE.CALENDAR}>
-            <BracketText
-              text="calendar"
-              red={router.pathname === ROUTE.CALENDAR}
-              selected={router.pathname === ROUTE.CALENDAR}
-              hover
-            />
-          </NextLink>
+          <BracketText
+            onClick={() => handleLinkClick(ROUTE.CALENDAR)}
+            text="calendar"
+            red={currentActive === ROUTE.CALENDAR}
+            selected={currentActive === ROUTE.CALENDAR}
+            hover
+          />
 
-          <NextLink href={ROUTE.TEAMS}>
-            <BracketText
-              text="teams"
-              red={router.pathname === ROUTE.TEAMS}
-              selected={router.pathname === ROUTE.TEAMS}
-              hover
-            />
-          </NextLink>
+          <BracketText
+            onClick={() => handleLinkClick(ROUTE.TEAMS)}
+            text="teams"
+            red={currentActive === ROUTE.TEAMS}
+            selected={currentActive === ROUTE.TEAMS}
+            hover
+          />
 
-          <NextLink href={ROUTE.PROJECTS}>
-            <BracketText
-              text="projects"
-              red={router.pathname === ROUTE.PROJECTS}
-              selected={router.pathname === ROUTE.PROJECTS}
-              hover
-            />
-          </NextLink>
+          <BracketText
+            onClick={() => handleLinkClick(ROUTE.PROJECTS)}
+            text="projects"
+            red={currentActive === ROUTE.PROJECTS}
+            selected={currentActive === ROUTE.PROJECTS}
+            hover
+          />
 
           {status === AUTH_STATUS.AUTHENTICATED && (
-            <NextLink href={ROUTE.YOUR_PROJECT}>
-              <BracketText
-                text="your project"
-                red={router.pathname === ROUTE.YOUR_PROJECT}
-                selected={router.pathname === ROUTE.YOUR_PROJECT}
-                hover
-              />
-            </NextLink>
+            <BracketText
+              onClick={() => handleLinkClick(ROUTE.YOUR_PROJECT)}
+              text="your project"
+              red={currentActive === ROUTE.YOUR_PROJECT}
+              selected={currentActive === ROUTE.YOUR_PROJECT}
+              hover
+            />
           )}
 
           {status === AUTH_STATUS.AUTHENTICATED && sessionData?.user?.isAdmin && (
-            <NextLink href={ROUTE.ADMIN}>
-              <BracketText
-                text="admin"
-                red={router.pathname === ROUTE.ADMIN}
-                selected={router.pathname === ROUTE.ADMIN}
-                hover
-              />
-            </NextLink>
+            <BracketText
+              onClick={() => handleLinkClick(ROUTE.ADMIN)}
+              text="admin"
+              red={currentActive === ROUTE.ADMIN}
+              selected={currentActive === ROUTE.ADMIN}
+              hover
+            />
           )}
         </Links>
       </Main>
