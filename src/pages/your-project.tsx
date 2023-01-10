@@ -100,7 +100,7 @@ const YourProject: NextPage = () => {
 
   const container = (children: JSX.Element) => <Container>{children}</Container>;
 
-  if (user && !user.projectId) return container(<Text>{"looks like you haven't joined a project yet"}</Text>);
+  if (user && !user.projectId) return container(<Text>{"looks like you haven't joined a team yet"}</Text>);
   if (isLoading) return container(<Loading showLabel />);
   if (isError) return container(<Text yellow>{'there was an error getting the project information'}</Text>);
 
