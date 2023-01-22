@@ -18,8 +18,8 @@ export enum ABLY_EVENT {
   UPDATE_TEAM_PROJECT = 'update-team-project',
 }
 
-export const MIN_TEAM_SIZE = 2;
-export const MAX_TEAM_SIZE = 3;
+export const MIN_TEAM_SIZE = 3;
+export const MAX_TEAM_SIZE = 4;
 
 export const CHARACTER_WIDTH = 10.56;
 

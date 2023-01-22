@@ -1,5 +1,4 @@
 import { publicProcedure, router } from '@server/trpc/trpc';
-import { ACTION, MIN_TEAM_SIZE } from '@utils/constants';
 import { z } from 'zod';
 
 export const publicRouter = router({
@@ -15,19 +14,15 @@ export const publicRouter = router({
   }),
 
   getProjects: publicProcedure.query(async ({ ctx }) => {
-    const teamBuildingAction = await ctx.prisma.action.findFirst({ where: { name: ACTION.TEAM } });
-    const teamBuildingAllowed = teamBuildingAction?.allowed ?? false;
+    // const numberOfUsers = await ctx.prisma.user.count();
+    const minNumberOfProjects = 6; // Math.ceil(numberOfUsers / MIN_TEAM_SIZE);
+    const numberOfProjectsToCreate = minNumberOfProjects - (await ctx.prisma.project.count());
 
-    if (teamBuildingAllowed) {
-      const numberOfUsers = await ctx.prisma.user.count();
-      const minNumberOfProjects = Math.ceil(numberOfUsers / MIN_TEAM_SIZE);
-      const numberOfProjectsToCreate = minNumberOfProjects - (await ctx.prisma.project.count());
-
-      if (numberOfProjectsToCreate > 0)
-        await ctx.prisma.project.createMany({
-          data: Array.from({ length: numberOfProjectsToCreate }).map(() => ({})),
-        });
-    } else await ctx.prisma.project.deleteMany({ where: { users: { none: {} } } });
+    if (numberOfProjectsToCreate > 0)
+      await ctx.prisma.project.createMany({
+        data: Array.from({ length: numberOfProjectsToCreate }).map(() => ({})),
+      });
+    // await ctx.prisma.project.deleteMany({ where: { users: { none: {} } } });
 
     return ctx.prisma.project.findMany({
       select: {
