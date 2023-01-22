@@ -2,7 +2,6 @@ import BracketText from '@components/BracketText';
 import Loading from '@components/Loading';
 import Team from '@components/Team';
 import Text from '@components/Text';
-import useAbly from '@hooks/useAbly';
 import { styled } from '@styles/stitches.config';
 import { ACTION, AUTH_STATUS, START_TIME } from '@utils/constants';
 import parseName from '@utils/parseName';
@@ -32,7 +31,7 @@ const Wrap = styled('ul', {
 });
 
 const Teams: NextPage = () => {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   const { data: teamAction, isError: isTeamActionError } = trpc.public.getAction.useQuery({ name: ACTION.TEAM });
   const { data: users, isError: isUsersError } = trpc.public.getUsers.useQuery();
@@ -44,8 +43,6 @@ const Teams: NextPage = () => {
   } = trpc.private.getUser.useQuery(undefined, { enabled: status === AUTH_STATUS.AUTHENTICATED });
 
   const isError = isTeamActionError || isUsersError || isProjectsError || isUserError;
-
-  const { updateTeams } = useAbly();
   const usersWithoutATeam = users?.filter(({ projectId }) => !projectId);
 
   if ((status !== AUTH_STATUS.UNAUTHENTICATED && isGetUserLoading) || isProjectsLoading)
@@ -56,20 +53,13 @@ const Teams: NextPage = () => {
     );
 
   const hasStarted = new Date().getTime() - START_TIME > 0;
+  const isAdmin = session?.user?.isAdmin ?? false;
 
   return (
     <Container>
       <Wrap bigGap>
-        {projects?.map((project, i) => (
-          <Team
-            user={user}
-            key={project.id}
-            active={teamAction?.allowed}
-            team={project}
-            index={i + 1}
-            updateTeams={updateTeams}
-          ></Team>
-        ))}
+        {(isAdmin || teamAction?.allowed) &&
+          projects?.map((project, i) => <Team key={project.id} user={user} team={project} index={i + 1}></Team>)}
       </Wrap>
 
       {(teamAction?.allowed || !hasStarted) && usersWithoutATeam && usersWithoutATeam.length > 0 && (
@@ -78,7 +68,7 @@ const Teams: NextPage = () => {
 
           <Wrap>
             {usersWithoutATeam.map(({ id, name }) => (
-              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} />
+              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} disabled />
             ))}
           </Wrap>
         </>

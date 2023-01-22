@@ -25,7 +25,7 @@ const Text = styled('p', {
     },
     disabled: {
       true: {
-        textDecoration: 'line-through',
+        pointerEvents: 'none',
       },
     },
     underlined: {

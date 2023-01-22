@@ -128,7 +128,7 @@ const Admin: NextPage = () => {
       <Button
         icon={<RiTeamFill />}
         isDisabled={isUpdateActionLoading || isToggleWinnerLoading}
-        label={teamActionAllowed ? 'Stop team building' : 'Start team building'}
+        label={teamActionAllowed ? 'Hide teams' : 'Show teams'}
         onClick={() => handleSetAction(ACTION.TEAM, !teamActionAllowed)}
       />
 
