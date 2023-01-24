@@ -3,7 +3,7 @@ import Loading from '@components/Loading';
 import Team from '@components/Team';
 import Text from '@components/Text';
 import { styled } from '@styles/stitches.config';
-import { ACTION, AUTH_STATUS, START_TIME } from '@utils/constants';
+import { ACTION, AUTH_STATUS } from '@utils/constants';
 import parseName from '@utils/parseName';
 import { trpc } from '@utils/trpc';
 import type { NextPage } from 'next';
@@ -52,7 +52,6 @@ const Teams: NextPage = () => {
       </Container>
     );
 
-  const hasStarted = new Date().getTime() - START_TIME > 0;
   const isAdmin = session?.user?.isAdmin ?? false;
 
   return (
@@ -62,12 +61,24 @@ const Teams: NextPage = () => {
           projects?.map((project, i) => <Team key={project.id} user={user} team={project} index={i + 1}></Team>)}
       </Wrap>
 
-      {(teamAction?.allowed || !hasStarted) && usersWithoutATeam && usersWithoutATeam.length > 0 && (
+      {teamAction?.allowed && usersWithoutATeam && usersWithoutATeam.length > 0 && (
         <>
-          <Text>{teamAction?.allowed ? 'participants without a team:' : 'participants:'}</Text>
+          <Text>{'participants without a team:'}</Text>
 
           <Wrap>
             {usersWithoutATeam.map(({ id, name }) => (
+              <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} disabled />
+            ))}
+          </Wrap>
+        </>
+      )}
+
+      {!teamAction?.allowed && users && (
+        <>
+          <Text>{'participants:'}</Text>
+
+          <Wrap>
+            {users.map(({ id, name }) => (
               <BracketText key={id} red={id === user?.id} text={parseName(name).fullName} disabled />
             ))}
           </Wrap>
