@@ -3,7 +3,7 @@ export interface PlaceText {
   text: string;
 }
 
-const CHARACTERS_WIDTH = 25;
+const CHARACTERS_WIDTH = 27;
 const DEFAULT_POSITION = 3;
 
 interface GetBoxRowProps {
